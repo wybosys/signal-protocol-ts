@@ -1,7 +1,7 @@
 import {DeviceConsistencySignature} from "../devices/deviceconsistencysignature";
 import {ISerializableObject} from "../../../../core/object";
 import {DeviceConsistencyCommitment} from "../devices/deviceconsistencycommitment";
-import {IdentityKey, IdentityKeyPair} from "../keypair";
+import {IdentityKeyPair} from "../keypair";
 import {DeviceConsistencyCodeMessage} from "../model/whispertext";
 import {Crypto} from "../crypto";
 
@@ -23,7 +23,7 @@ export class DeviceConsistencyMessage implements ISerializableObject {
         return r;
     }
 
-    static Unserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer, identityKey: IdentityKey): DeviceConsistencyMessage {
+    static Unserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer): DeviceConsistencyMessage {
         let t = new DeviceConsistencyCodeMessage();
         t.serialin(serialized);
 
