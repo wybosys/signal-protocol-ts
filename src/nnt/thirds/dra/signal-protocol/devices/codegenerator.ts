@@ -25,7 +25,7 @@ export class CodeGenerator {
     }
 
     static GetEncodedChunk(hash: Buffer, offset: number) {
-        let chunk = hash.subarray(offset, offset + 5).readBigInt64BE();
+        let chunk = hash.subarray(offset, offset + 5).readBigInt64BE() % 100000n;
         return util.format("%05d", chunk);
     }
 }
