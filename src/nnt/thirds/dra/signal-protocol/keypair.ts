@@ -87,7 +87,7 @@ export class KeyPair {
 }
 
 export class PreKey {
-    id: number;
+    index: number;
     key: PublicKey;
 }
 
