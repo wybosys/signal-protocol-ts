@@ -1,6 +1,7 @@
 import {Model} from "./model";
 import {PublicKey} from "../keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
+import {SignatureBuffer} from "../crypto";
 
 export class SignalMessage extends Model {
 
@@ -46,5 +47,5 @@ export class SenderKeyDistributionMessage extends Model {
 
 export class DeviceConsistencyCodeMessage extends Model {
     generation: number;
-    signature: FixedBuffer32;
+    signature: SignatureBuffer;
 }
