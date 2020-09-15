@@ -1,4 +1,4 @@
-import {CodeGenerator} from "../devices/codegenerator";
+import {DeviceConsistencyCodeGenerator} from "../devices/deviceconsistencycodegenerator";
 
 export class DisplayableFingerprint {
 
@@ -18,12 +18,12 @@ export class DisplayableFingerprint {
 
     static GetDisplayStringFor(fp: Buffer) {
         return [
-            CodeGenerator.GetEncodedChunk(fp, 0),
-            CodeGenerator.GetEncodedChunk(fp, 5),
-            CodeGenerator.GetEncodedChunk(fp, 10),
-            CodeGenerator.GetEncodedChunk(fp, 15),
-            CodeGenerator.GetEncodedChunk(fp, 20),
-            CodeGenerator.GetEncodedChunk(fp, 25)
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 0),
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 5),
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 10),
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 15),
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 20),
+            DeviceConsistencyCodeGenerator.GetEncodedChunk(fp, 25)
         ].join('');
     }
 }

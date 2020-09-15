@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 import {BufferT} from "../../../../core/buffert";
 import * as util from 'util';
 
-export class CodeGenerator {
+export class DeviceConsistencyCodeGenerator {
     static CODE_VERSION = 0;
 
     static GenerateFor(commitment: Commitment, signatures: Signature[]) {

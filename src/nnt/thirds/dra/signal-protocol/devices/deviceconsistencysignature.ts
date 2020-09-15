@@ -1,4 +1,4 @@
-export class Signature {
+export class DeviceConsistencySignature {
 
     constructor(sign: Buffer, vrfop: Buffer) {
         this._sign = sign;
@@ -16,7 +16,7 @@ export class Signature {
     private _vrfoutput: Buffer;
     private _sign: Buffer;
 
-    static Sort(l: Signature, r: Signature) {
+    static Sort(l: DeviceConsistencySignature, r: DeviceConsistencySignature) {
         return l._vrfoutput.compare(r._vrfoutput);
     }
 }

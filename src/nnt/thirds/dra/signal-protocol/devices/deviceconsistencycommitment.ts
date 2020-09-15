@@ -3,14 +3,14 @@ import * as crypto from 'crypto';
 import {BufferT} from "../../../../core/buffert";
 import {ISerializableObject} from "../../../../core/object";
 
-export class Commitment implements ISerializableObject {
+export class DeviceConsistencyCommitment implements ISerializableObject {
 
     constructor(generation: number, identityKeys: IdentityKey[]) {
         let keys = identityKeys.concat();
         keys.sort(IdentityKey.Sort);
 
         let cry = crypto.createHash('sha-512');
-        cry.update(Commitment.VERSION);
+        cry.update(DeviceConsistencyCommitment.VERSION);
         cry.update(BufferT.FromInt32BE(generation));
         identityKeys.forEach(e => {
             cry.update(e.serialize());
