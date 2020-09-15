@@ -1,8 +1,9 @@
 import {IdentityKey} from "../keypair";
 import * as crypto from 'crypto';
 import {BufferT} from "../../../../core/buffert";
+import {ISerializableObject} from "../../../../core/object";
 
-class Commitment {
+export class Commitment implements ISerializableObject {
 
     constructor(generation: number, identityKeys: IdentityKey[]) {
         let keys = identityKeys.concat();
@@ -28,7 +29,11 @@ class Commitment {
         return this._generation;
     }
 
-    get serialized(): Buffer {
+    serialize(): Buffer {
         return this._serialized;
+    }
+
+    unserialize(buf: Buffer): this {
+        return null;
     }
 }

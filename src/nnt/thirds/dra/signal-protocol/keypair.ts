@@ -113,7 +113,7 @@ export class IdentityKey implements ISerializableObject {
         return this;
     }
 
-    static Sort(l: IdentityKey, r: IdentityKey): number {
+    static Sort(l: IdentityKey, r: IdentityKey) {
         return l.hash - r.hash;
     }
 }

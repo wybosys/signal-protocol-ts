@@ -15,4 +15,8 @@ export class Signature {
 
     private _vrfoutput: Buffer;
     private _sign: Buffer;
+
+    static Sort(l: Signature, r: Signature) {
+        return l._vrfoutput.compare(r._vrfoutput);
+    }
 }
