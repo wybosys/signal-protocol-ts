@@ -7,6 +7,9 @@ export class PreKeyRecord implements ISerializableObject {
 
     private _structure: PreKeyRecordStructureModel;
 
+    private constructor() {
+    }
+
     static Create(id: number, keyPair: KeyPair): PreKeyRecord {
         let r = new PreKeyRecord();
         r._structure = use(new PreKeyRecordStructureModel(), m => {
