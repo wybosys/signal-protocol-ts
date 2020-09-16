@@ -12,7 +12,7 @@ export class SessionRecord implements ISerializableObject {
     private _previousStates: SessionState[] = [];
     private _fresh = false;
 
-    private constructor() {
+    constructor() {
     }
 
     static Create(): SessionRecord {
