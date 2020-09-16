@@ -2,12 +2,13 @@ import {AesKeyBuffer, HMacKeyBuffer, IvBuffer} from "../crypto";
 import {BufferT} from "../../../../core/buffert";
 import {FixedBuffer16, FixedBuffer32} from "../../../../core/buffer";
 
-const SIZE = 80;
 const CIPHER_KEY_LENGTH = 32;
 const MAC_KEY_LENGTH = 32;
 const IV_LENGTH = 16;
 
 export class DerivedMessageSecrets {
+
+    static SIZE = 80;
 
     private _cipherKey: AesKeyBuffer;
     private _macKey: HMacKeyBuffer;
