@@ -11,7 +11,7 @@ export abstract class CiphertextMessage implements ISerializableObject {
 
     abstract serialize(): Buffer;
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         return null;
     }
 

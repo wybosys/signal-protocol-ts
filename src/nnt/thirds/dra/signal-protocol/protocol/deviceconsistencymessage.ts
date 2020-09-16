@@ -8,7 +8,7 @@ import {Crypto} from "../crypto";
 
 export class DeviceConsistencyMessage implements ISerializableObject {
 
-    static FromKeyPair(commitment: DeviceConsistencyCommitment, identityKeyPair: IdentityKeyPair): DeviceConsistencyMessage {
+    static Sign(commitment: DeviceConsistencyCommitment, identityKeyPair: IdentityKeyPair): DeviceConsistencyMessage {
         let sign = Crypto.Sign(commitment.serialize(), identityKeyPair.priv);
 
         let r = new DeviceConsistencyMessage();
@@ -23,7 +23,7 @@ export class DeviceConsistencyMessage implements ISerializableObject {
         return r;
     }
 
-    static Unserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer): DeviceConsistencyMessage {
+    static Deserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer): DeviceConsistencyMessage {
         let t = new DeviceConsistencyCodeMessage();
         t.serialin(serialized);
 
@@ -43,7 +43,7 @@ export class DeviceConsistencyMessage implements ISerializableObject {
         return this._serialized;
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         return null;
     }
 
