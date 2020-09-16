@@ -4,6 +4,7 @@ import {FixedBuffer32} from "../../../../core/buffer";
 import * as crypto from 'crypto';
 import {BytesBuilder} from "../../../../core/bytes";
 import {BufferT} from "../../../../core/buffert";
+import {SaltBuffer} from "../crypto";
 
 const HASH_OUTPUT_SIZE = 32;
 
@@ -21,16 +22,16 @@ export abstract class HKDF {
         return null;
     }
 
-    deriveSecrets(inputKeyMaterial: Buffer, info: Buffer, outputLength: number, salt?: FixedBuffer32): Buffer {
+    deriveSecrets(inputKeyMaterial: FixedBuffer32, info: Buffer, outputLength: number, salt?: SaltBuffer): Buffer {
         if (!salt)
             salt = new FixedBuffer32();
         let prk = this.extract(salt, inputKeyMaterial);
         return this.expand(prk, info, outputLength);
     }
 
-    private extract(salt: FixedBuffer32, inputKeyMaterial: Buffer): Buffer {
+    private extract(salt: FixedBuffer32, inputKeyMaterial: FixedBuffer32): Buffer {
         let cry = crypto.createHmac('sha256', salt.buffer);
-        cry.update(inputKeyMaterial);
+        cry.update(inputKeyMaterial.buffer);
         return cry.digest();
     }
 

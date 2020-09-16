@@ -1,8 +1,9 @@
 import {BufferT} from "../../../../core/buffert";
 import {HKDF} from "../kdf/HKDF";
-import {FixedBuffer8} from "../../../../core/buffer";
+import {FixedBuffer32, FixedBuffer8} from "../../../../core/buffer";
 import {MessageKeys} from "./messagekeys";
 import {DerivedMessageSecrets} from "../kdf/derivedmessagesecrets";
+import {HMacKeyBuffer} from "../crypto";
 import crypto = require('crypto');
 
 const MESSAGE_KEY_SEED = new FixedBuffer8(BufferT.FromInt8(0x01));
@@ -11,10 +12,10 @@ const CHAIN_KEY_SEED = new FixedBuffer8(BufferT.FromInt8(0x02));
 export class ChainKey {
 
     private _kdf: HKDF;
-    private _key: Buffer;
+    private _key: HMacKeyBuffer;
     private _index: number;
 
-    constructor(kdf: HKDF, key: Buffer, index: number) {
+    constructor(kdf: HKDF, key: HMacKeyBuffer, index: number) {
         this._kdf = kdf;
         this._key = key;
         this._index = index;
@@ -41,9 +42,9 @@ export class ChainKey {
         return this._index;
     }
 
-    private getBaseMaterial(seed: FixedBuffer8): Buffer {
-        let cry = crypto.createHmac('sha256', this._key);
+    private getBaseMaterial(seed: FixedBuffer8): HMacKeyBuffer {
+        let cry = crypto.createHmac('sha256', this._key.buffer);
         cry.update(seed.buffer);
-        return cry.digest();
+        return new FixedBuffer32(cry.digest());
     }
 }
