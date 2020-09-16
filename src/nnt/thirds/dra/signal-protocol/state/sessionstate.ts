@@ -21,6 +21,9 @@ export class SessionState implements ISerializableObject {
 
     private _sessionStructure: SessionStructureModel;
 
+    private constructor() {
+    }
+
     static Create(): SessionState {
         let r = new SessionState();
         r._sessionStructure = new SessionStructureModel();
