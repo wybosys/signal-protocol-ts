@@ -140,6 +140,7 @@ export class SignedPreKey extends PreKey {
 }
 
 export class IdentityKey implements ISerializableObject {
+    
     key: PublicKey;
 
     get hash(): number {

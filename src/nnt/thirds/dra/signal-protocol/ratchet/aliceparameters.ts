@@ -1,11 +1,11 @@
-import {IdentityKey, IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
+import {IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
 
 export class AliceParameters {
 
     ourIdentityKey: IdentityKeyPair;
     ourBaseKey: KeyPair;
 
-    theirIdentityKey: IdentityKey;
+    theirIdentityKey: IdentityKeyPair;
     theirSignedPreKey: PublicKey;
     theirOneTimePreKey: PublicKey;
     theirRatchetKey: PublicKey;

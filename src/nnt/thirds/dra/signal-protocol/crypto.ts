@@ -1,5 +1,5 @@
-import {PrivateKey, PublicKey} from "./keypair";
-import {FixedBuffer16, FixedBuffer32, FixedBuffer8} from "../../../core/buffer";
+import {KeyPair, PrivateKey, PublicKey} from "./keypair";
+import {FixedBuffer16, FixedBuffer32, FixedBuffer64, FixedBuffer8} from "../../../core/buffer";
 import nacl = require("tweetnacl");
 
 export type AesKeyBuffer = FixedBuffer32;
@@ -11,6 +11,14 @@ export type SharedKeyBuffer = FixedBuffer32;
 export type SaltBuffer = FixedBuffer32;
 
 export class Crypto {
+
+    static GenerateKeyPair(): KeyPair {
+        let r = new KeyPair();
+        let kp = nacl.sign.keyPair();
+        r.pub = new PublicKey(new FixedBuffer32(kp.publicKey));
+        r.priv = new PrivateKey(new FixedBuffer64(kp.secretKey));
+        return r;
+    }
 
     static Sign(buf: Buffer, key: PrivateKey): SignatureBuffer {
         let res = nacl.sign.detached(buf, key.forSign.buffer);

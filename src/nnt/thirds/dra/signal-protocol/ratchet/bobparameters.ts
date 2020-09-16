@@ -1,4 +1,4 @@
-import {IdentityKey, IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
+import {IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
 
 export class BobParameters {
 
@@ -7,6 +7,6 @@ export class BobParameters {
     ourOneTimePreKey: KeyPair;
     ourRatchetKey: KeyPair;
 
-    theirIdentityKey: IdentityKey;
+    theirIdentityKey: IdentityKeyPair;
     theirBaseKey: PublicKey;
 }
