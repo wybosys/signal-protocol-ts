@@ -15,6 +15,10 @@ export class PreKeySignalMessage extends CiphertextMessage {
     private _message: SignalMessage;
     private _serialized: Buffer;
 
+    private constructor() {
+        super();
+    }
+
     static Deserialize(serialized: Buffer): PreKeySignalMessage {
         let r = new PreKeySignalMessage();
         r._version = serialized.readInt8();

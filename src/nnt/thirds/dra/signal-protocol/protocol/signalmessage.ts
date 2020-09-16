@@ -18,6 +18,10 @@ export class SignalMessage extends CiphertextMessage {
     private _ciphertext: Buffer;
     private _serialized: Buffer;
 
+    private constructor() {
+        super();
+    }
+
     static Deserialize(serialized: Buffer): SignalMessage {
         let messageparts = BufferT.SplitAs(serialized, 1, serialized.byteLength - 1 - MAC_LENGTH, MAC_LENGTH);
         let version = messageparts[0].readInt8();

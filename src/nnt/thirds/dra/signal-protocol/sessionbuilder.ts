@@ -36,13 +36,7 @@ export class SessionBuilder {
     }
 
     static CreateByProtocolStore(store: ProtocolStore, remoteAddress: Address): SessionBuilder {
-        let r = new SessionBuilder();
-        r._sessionStore = store;
-        r._preKeyStore = store;
-        r._signedPreKeyStore = store;
-        r._identityKeyStore = store;
-        r._remoteAddress = remoteAddress;
-        return r;
+        return this.Create(store, store, store, store, remoteAddress);
     }
 
     async process(sessionRecord: SessionRecord, message: PreKeySignalMessage): Promise<number> {
