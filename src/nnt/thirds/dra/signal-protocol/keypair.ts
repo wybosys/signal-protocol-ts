@@ -49,7 +49,7 @@ export class PublicKey implements ISerializableObject {
         return this.ed.buffer;
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         if (this.ed)
             this.ed.reset(buf);
         else
@@ -71,7 +71,7 @@ export class PrivateKey implements ISerializableObject {
         return this.ed.buffer;
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         if (this.ed)
             this.ed = new Ed25519PrivateKey(buf);
         else
@@ -109,7 +109,7 @@ export class IdentityKey implements ISerializableObject {
     deserialize(buf: Buffer): this {
         if (!this.key)
             this.key = new PublicKey();
-        this.key.unserialize(buf);
+        this.key.deserialize(buf);
         return this;
     }
 

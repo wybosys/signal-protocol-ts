@@ -33,7 +33,7 @@ export class DeviceConsistencyCommitment implements ISerializableObject {
         return this._serialized;
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         return null;
     }
 }

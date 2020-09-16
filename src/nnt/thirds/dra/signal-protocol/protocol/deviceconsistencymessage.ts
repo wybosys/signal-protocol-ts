@@ -18,14 +18,14 @@ export class DeviceConsistencyMessage implements ISerializableObject {
         let t = new DeviceConsistencyCodeMessageModel();
         t.generation = r._generation;
         t.signature = sign;
-        r._serialized = t.serialout();
+        r._serialized = t.serialize();
 
         return r;
     }
 
     static Deserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer): DeviceConsistencyMessage {
         let t = new DeviceConsistencyCodeMessageModel();
-        t.serialin(serialized);
+        t.deserialize(serialized);
 
         let r = new DeviceConsistencyMessage();
         r._generation = t.generation;
