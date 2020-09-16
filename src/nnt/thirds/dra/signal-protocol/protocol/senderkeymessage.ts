@@ -57,7 +57,7 @@ export class SenderKeyMessage extends CiphertextMessage {
         let signature = this.GetSignature(signatureKey, Buffer.concat([version, message]));
 
         let r = new SenderKeyMessage();
-        r._serialized = Buffer.concat([version, message, signature]);
+        r._serialized = Buffer.concat([version, message, signature.buffer]);
         r._messageVersion = this.CURRENT_VERSION;
         r._keyId = keyId;
         r._iteration = iteration;
