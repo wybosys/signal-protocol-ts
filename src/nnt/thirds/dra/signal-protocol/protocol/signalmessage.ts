@@ -19,7 +19,7 @@ export class SignalMessage extends CiphertextMessage {
     private _serialized: Buffer;
 
     static Deserialize(serialized: Buffer): SignalMessage {
-        let messageparts = BufferT.Split(serialized, MAC_LENGTH, 1, serialized.byteLength - 1 - MAC_LENGTH);
+        let messageparts = BufferT.SplitAs(serialized, 1, serialized.byteLength - 1 - MAC_LENGTH, MAC_LENGTH);
         let version = messageparts[0].readInt8();
         let message = messageparts[1];
         let mac = messageparts[2];
@@ -91,7 +91,7 @@ export class SignalMessage extends CiphertextMessage {
     }
 
     verifyMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer): boolean {
-        let parts = BufferT.Split(this._serialized, MAC_LENGTH, 0, this._serialized.byteLength - MAC_LENGTH);
+        let parts = BufferT.SplitAs(this._serialized, this._serialized.byteLength - MAC_LENGTH, MAC_LENGTH);
         let ourMac = SignalMessage.GetMac(senderIdentityKey, receiverIdentityKey, macKey, parts[0]);
         let theirMac = parts[1];
 
