@@ -1,5 +1,5 @@
 import {FixedBuffer32, FixedBuffer64, FixedBufferType} from "../../../core/buffer";
-import {IComparableObject, ISerializableObject} from "../../../core/object";
+import {IComparableObject, IEqualableObject, ISerializableObject} from "../../../core/object";
 import ed2curve = require("ed2curve");
 
 class Ed25519PublicKey extends FixedBuffer32 {
@@ -37,7 +37,7 @@ class X25519Key extends FixedBuffer32 {
     _x25519: any;
 }
 
-export class PublicKey implements ISerializableObject, IComparableObject {
+export class PublicKey implements ISerializableObject, IComparableObject, IEqualableObject {
 
     constructor(buf?: FixedBuffer32) {
         if (buf) {
@@ -80,6 +80,10 @@ export class PublicKey implements ISerializableObject, IComparableObject {
 
     compare(r: this): number {
         return this.ed.compare(r.ed);
+    }
+
+    isEqual(r: this): boolean {
+        return this.compare(r) == 0;
     }
 }
 
@@ -139,8 +143,8 @@ export class SignedPreKey extends PreKey {
     signature: FixedBuffer32;
 }
 
-export class IdentityKey implements ISerializableObject {
-    
+export class IdentityKey implements ISerializableObject, IEqualableObject {
+
     key: PublicKey;
 
     get hash(): number {
@@ -156,6 +160,10 @@ export class IdentityKey implements ISerializableObject {
             this.key = new PublicKey();
         this.key.deserialize(buf);
         return this;
+    }
+
+    isEqual(r: this): boolean {
+        return this.key.isEqual(r.key);
     }
 
     static Sort(l: IdentityKey, r: IdentityKey) {
