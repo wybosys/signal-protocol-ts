@@ -38,8 +38,11 @@ export abstract class FixedBuffer<BYTELEN> implements ISerializableObject {
         return this._buf.compare(r._buf);
     }
 
-    isEqual(r: FixedBuffer<BYTELEN>): boolean {
-        return this.compare(r) == 0;
+    isEqual(r: FixedBuffer<BYTELEN> | Buffer): boolean {
+        if (r instanceof Buffer) {
+            return this._buf.compare(r) == 0;
+        }
+        return this._buf.compare(r.buffer) == 0;
     }
 
     at(idx: number): number {
@@ -92,7 +95,7 @@ export abstract class FixedBuffer<BYTELEN> implements ISerializableObject {
         return this._buf;
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         return this.reset(buf) ? this : null;
     }
 }
@@ -516,7 +519,7 @@ export class Buffers implements ISerializableObject {
         return fbuf.buffer;
     }
 
-    unserialize(b: Buffer): this {
+    deserialize(b: Buffer): this {
         let buf = StreamBuffer.From(b);
         this._arr.length = 0;
 

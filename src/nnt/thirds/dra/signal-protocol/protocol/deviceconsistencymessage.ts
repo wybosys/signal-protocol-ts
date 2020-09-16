@@ -2,20 +2,20 @@ import {DeviceConsistencySignature} from "../devices/deviceconsistencysignature"
 import {ISerializableObject} from "../../../../core/object";
 import {DeviceConsistencyCommitment} from "../devices/deviceconsistencycommitment";
 import {IdentityKeyPair} from "../keypair";
-import {DeviceConsistencyCodeMessage} from "../model/whispertext";
 import {Crypto} from "../crypto";
+import {DeviceConsistencyCodeMessageModel} from "../model/whispertext";
 
 
 export class DeviceConsistencyMessage implements ISerializableObject {
 
-    static Sign(commitment: DeviceConsistencyCommitment, identityKeyPair: IdentityKeyPair): DeviceConsistencyMessage {
+    static Create(commitment: DeviceConsistencyCommitment, identityKeyPair: IdentityKeyPair): DeviceConsistencyMessage {
         let sign = Crypto.Sign(commitment.serialize(), identityKeyPair.priv);
 
         let r = new DeviceConsistencyMessage();
         r._generation = commitment.generation;
         r._signature = new DeviceConsistencySignature(sign);
 
-        let t = new DeviceConsistencyCodeMessage();
+        let t = new DeviceConsistencyCodeMessageModel();
         t.generation = r._generation;
         t.signature = sign;
         r._serialized = t.serialout();
@@ -24,7 +24,7 @@ export class DeviceConsistencyMessage implements ISerializableObject {
     }
 
     static Deserialize(commitment: DeviceConsistencyCommitment, serialized: Buffer): DeviceConsistencyMessage {
-        let t = new DeviceConsistencyCodeMessage();
+        let t = new DeviceConsistencyCodeMessageModel();
         t.serialin(serialized);
 
         let r = new DeviceConsistencyMessage();

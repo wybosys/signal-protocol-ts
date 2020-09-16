@@ -106,7 +106,7 @@ export class IdentityKey implements ISerializableObject {
         return this.key.serialize();
     }
 
-    unserialize(buf: Buffer): this {
+    deserialize(buf: Buffer): this {
         if (!this.key)
             this.key = new PublicKey();
         this.key.unserialize(buf);

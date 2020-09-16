@@ -1,41 +1,74 @@
 import {Model} from "./model";
 import {KeyPair, PreKey, PrivateKey, PublicKey} from "../keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
+import {IndexedObject} from "../../../../core/kernel";
 
-export class Chain extends Model {
+export class ChainModel extends Model {
     senderRatchetKey: KeyPair;
-    chainKey: ChainKey;
-    messageKeys: MessageKey[] = [];
+    chainKey: ChainKeyModel;
+    messageKeys: MessageKeyModel[] = [];
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class ChainKey extends PreKey {
+export class ChainKeyModel extends PreKey {
 
 }
 
-export class MessageKey extends Model {
+export class MessageKeyModel extends Model {
 
     index: number;
     cpherKey: PrivateKey;
     macKey: FixedBuffer32;
     iv: FixedBuffer32;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class PendingKeyExchange extends Model {
+export class PendingKeyExchangeModel extends Model {
 
     sequence: number;
     localBaseKey: KeyPair;
     localRatchetKey: KeyPair;
     localIdentityKey: KeyPair;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class PendingPreKey extends Model {
+export class PendingPreKeyModel extends Model {
 
     preKeyId: number;
     signedPreKeyId: number;
     baseKey: PublicKey;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SessionStructure extends Model {
+export class SessionStructureModel extends Model {
 
     sessionVersion: number;
     localIdentity: PublicKey;
@@ -44,64 +77,128 @@ export class SessionStructure extends Model {
     rootKey: FixedBuffer32;
     previousCounter: number;
 
-    senderChain: Chain;
-    receiverChains: Chain[] = [];
+    senderChain: ChainModel;
+    receiverChains: ChainModel[] = [];
 
-    pendingKeyExchange: PendingKeyExchange;
-    pendingPreKey: PendingPreKey;
+    pendingKeyExchange: PendingKeyExchangeModel;
+    pendingPreKey: PendingPreKeyModel;
 
     remoteRegistrationId: number;
     localRegistrationId: number;
 
     needsRefresh: boolean;
     aliceBaseKey: PublicKey;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class RecordStructure extends Model {
+export class RecordStructureModel extends Model {
 
-    currentSession: SessionStructure;
-    previousSessions: SessionStructure[] = [];
+    currentSession: SessionStructureModel;
+    previousSessions: SessionStructureModel[] = [];
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class PreKeyRecordStructure extends Model {
+export class PreKeyRecordStructureModel extends Model {
 
     id: number;
     key: KeyPair;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SignedPreKeyRecordStructure extends Model {
+export class SignedPreKeyRecordStructureModel extends Model {
 
     id: number;
     key: KeyPair;
     signature: FixedBuffer32;
     timestamp: number;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SenderChainKey extends Model {
+export class SenderChainKeyModel extends Model {
 
     iteration: number;
     seed: FixedBuffer32;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SenderMessageKey extends Model {
+export class SenderMessageKeyModel extends Model {
 
     iteration: number;
     seed: FixedBuffer32;
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SenderSigningKey extends KeyPair {
+export class SenderSigningKeyModel extends KeyPair {
 
 }
 
-export class SenderKeyStateStructure extends Model {
+export class SenderKeyStateStructureModel extends Model {
 
     senderKeyId: number;
-    senderChainKey: SenderChainKey;
-    senderSigningKey: SenderSigningKey;
-    senderMessageKeys: SenderMessageKey[] = [];
+    senderChainKey: SenderChainKeyModel;
+    senderSigningKey: SenderSigningKeyModel;
+    senderMessageKeys: SenderMessageKeyModel[] = [];
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }
 
-export class SenderKeyRecordStructure extends Model {
+export class SenderKeyRecordStructureModel extends Model {
 
-    senderKeyStates: SenderKeyStateStructure[] = [];
+    senderKeyStates: SenderKeyStateStructureModel[] = [];
+
+    toPod(): IndexedObject {
+        return null;
+    }
+
+    fromPod(obj: IndexedObject): this {
+        return this;
+    }
 }

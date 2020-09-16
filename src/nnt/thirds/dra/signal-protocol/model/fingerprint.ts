@@ -1,7 +1,7 @@
 import {IndexedObject} from "../../../../core/kernel";
 import {Model} from "./model";
 
-export class LogicalFingerprint extends Model {
+export class LogicalFingerprintModel extends Model {
 
     content: Buffer;
 
@@ -17,11 +17,11 @@ export class LogicalFingerprint extends Model {
     }
 }
 
-export class CombinedFingerprints extends Model {
+export class CombinedFingerprintsModel extends Model {
 
     version: number;
-    local: LogicalFingerprint;
-    remote: LogicalFingerprint;
+    local: LogicalFingerprintModel;
+    remote: LogicalFingerprintModel;
 
     toPod(): IndexedObject {
         return {
@@ -34,9 +34,9 @@ export class CombinedFingerprints extends Model {
     fromPod(obj: IndexedObject): this {
         this.version = obj.version;
         if (obj.local)
-            this.local = new LogicalFingerprint().fromPod(obj.local);
+            this.local = new LogicalFingerprintModel().fromPod(obj.local);
         if (obj.remote)
-            this.remote = new LogicalFingerprint().fromPod(obj.remote);
+            this.remote = new LogicalFingerprintModel().fromPod(obj.remote);
         return this;
     }
 }

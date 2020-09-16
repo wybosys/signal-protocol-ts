@@ -1,15 +1,15 @@
-import {IPodObject} from "../../../../core/object";
+import {IPodObject, ISerializableObject} from "../../../../core/object";
 import {toJson, toJsonObject} from "../../../../core/json";
 import {IndexedObject} from "../../../../core/kernel";
 
-export abstract class Model implements IPodObject {
+export abstract class Model implements IPodObject, ISerializableObject {
 
-    serialout = (): Buffer => {
+    serialize(): Buffer {
         return Buffer.from(toJson(this.toPod()), 'utf8');
     }
 
-    serialin = (data: Buffer): this => {
-        let o = toJsonObject(data.toString('utf8'));
+    deserialize(buf: Buffer): this {
+        let o = toJsonObject(buf.toString('utf8'));
         if (!o)
             return null;
         this.fromPod(o);

@@ -1,8 +1,10 @@
 import {PrivateKey, PublicKey} from "./keypair";
-import {FixedBuffer32} from "../../../core/buffer";
+import {FixedBuffer32, FixedBuffer8} from "../../../core/buffer";
 import nacl = require("tweetnacl");
 
 export type SignatureBuffer = FixedBuffer32;
+export type HMacKeyBuffer = FixedBuffer32;
+export type HMacDigestBuffer = FixedBuffer8;
 
 export class Crypto {
 
@@ -14,4 +16,5 @@ export class Crypto {
     static VerifySign(buf: Buffer, sig: SignatureBuffer, key: PublicKey): boolean {
         return nacl.sign.detached.verify(buf, sig.buffer, key.ed.buffer);
     }
+
 }

@@ -15,7 +15,7 @@ export abstract class CiphertextMessage implements ISerializableObject {
         return null;
     }
 
-    abstract type(): number;
+    abstract type(): CiphertextMessageType;
 
     static CURRENT_VERSION = 3;
     static ENCRYPTED_MESSAGE_OVERHEAD = 53;

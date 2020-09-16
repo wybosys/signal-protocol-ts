@@ -1,1 +1,5 @@
+function main() {
 
+}
+
+main();
