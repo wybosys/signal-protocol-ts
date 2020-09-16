@@ -3,7 +3,7 @@ import {HKDF} from "../kdf/HKDF";
 import {FixedBuffer32, FixedBuffer8} from "../../../../core/buffer";
 import {MessageKeys} from "./messagekeys";
 import {DerivedMessageSecrets} from "../kdf/derivedmessagesecrets";
-import {HMacKeyBuffer} from "../crypto";
+import {PublicKey} from "../keypair";
 import crypto = require('crypto');
 
 const MESSAGE_KEY_SEED = new FixedBuffer8(BufferT.FromInt8(0x01));
@@ -12,10 +12,10 @@ const CHAIN_KEY_SEED = new FixedBuffer8(BufferT.FromInt8(0x02));
 export class ChainKey {
 
     private _kdf: HKDF;
-    private _key: HMacKeyBuffer;
+    private _key: PublicKey;
     private _index: number;
 
-    constructor(kdf: HKDF, key: HMacKeyBuffer, index: number) {
+    constructor(kdf: HKDF, key: PublicKey, index: number) {
         this._kdf = kdf;
         this._key = key;
         this._index = index;
@@ -28,7 +28,7 @@ export class ChainKey {
 
     getMessageKeys(): MessageKeys {
         let inputKeyMaterial = this.getBaseMaterial(MESSAGE_KEY_SEED);
-        let keyMaterialBytes = this._kdf.deriveSecrets(inputKeyMaterial, Buffer.from('WhisperMessageKeys'), DerivedMessageSecrets.SIZE);
+        let keyMaterialBytes = this._kdf.deriveSecrets(inputKeyMaterial.forSerialize, Buffer.from('WhisperMessageKeys'), DerivedMessageSecrets.SIZE);
 
         let keyMaterial = new DerivedMessageSecrets(keyMaterialBytes);
         return new MessageKeys(keyMaterial.cipherKey, keyMaterial.macKey, keyMaterial.iv, this._index);
@@ -42,9 +42,9 @@ export class ChainKey {
         return this._index;
     }
 
-    private getBaseMaterial(seed: FixedBuffer8): HMacKeyBuffer {
-        let cry = crypto.createHmac('sha256', this._key.buffer);
+    private getBaseMaterial(seed: FixedBuffer8): PublicKey {
+        let cry = crypto.createHmac('sha256', this._key.forSerialize.buffer);
         cry.update(seed.buffer);
-        return new FixedBuffer32(cry.digest());
+        return new PublicKey(new FixedBuffer32(cry.digest()));
     }
 }

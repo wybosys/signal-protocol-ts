@@ -100,8 +100,8 @@ export class SignalMessage extends CiphertextMessage {
 
     static GetMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer, serialized: BufferT): HMacDigestBuffer {
         let cry = crypto.createHmac('sha256', macKey.buffer);
-        cry.update(senderIdentityKey.key.ed.buffer);
-        cry.update(receiverIdentityKey.key.ed.buffer);
+        cry.update(senderIdentityKey.key.forSerialize.buffer);
+        cry.update(receiverIdentityKey.key.forSerialize.buffer);
         let fullMac = cry.digest();
         return new FixedBuffer8(fullMac.slice(0, MAC_LENGTH));
     }

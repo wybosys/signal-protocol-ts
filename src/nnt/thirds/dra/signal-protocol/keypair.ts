@@ -1,5 +1,5 @@
 import {FixedBuffer32, FixedBuffer64, FixedBufferType} from "../../../core/buffer";
-import {ISerializableObject} from "../../../core/object";
+import {IComparableObject, ISerializableObject} from "../../../core/object";
 import ed2curve = require("ed2curve");
 
 class Ed25519PublicKey extends FixedBuffer32 {
@@ -37,9 +37,29 @@ class X25519Key extends FixedBuffer32 {
     _x25519: any;
 }
 
-export class PublicKey implements ISerializableObject {
-    ed: Ed25519PublicKey;
-    x: X25519Key;
+export class PublicKey implements ISerializableObject, IComparableObject {
+
+    constructor(buf?: FixedBuffer32) {
+        if (buf) {
+            this.ed = new Ed25519PublicKey(buf.buffer);
+            this.x = this.ed.toX();
+        }
+    }
+
+    protected ed: Ed25519PublicKey;
+    protected x: X25519Key;
+
+    get forSerialize(): FixedBuffer32 {
+        return this.ed;
+    }
+
+    get forSign(): FixedBuffer32 {
+        return this.ed;
+    }
+
+    get forCrypto(): FixedBuffer32 {
+        return this.x;
+    }
 
     get hash(): number {
         return this.ed.hash;
@@ -57,11 +77,35 @@ export class PublicKey implements ISerializableObject {
         this.x = this.ed.toX();
         return this;
     }
+
+    compare(r: this): number {
+        return this.ed.compare(r.ed);
+    }
 }
 
 export class PrivateKey implements ISerializableObject {
-    ed: Ed25519PrivateKey;
-    x: X25519Key;
+
+    constructor(buf?: FixedBuffer64) {
+        if (buf) {
+            this.ed = new Ed25519PrivateKey(buf.buffer);
+            this.x = this.ed.toX();
+        }
+    }
+
+    protected ed: Ed25519PrivateKey;
+    protected x: X25519Key;
+
+    get forSerialize(): FixedBuffer64 {
+        return this.ed;
+    }
+
+    get forSign(): FixedBuffer64 {
+        return this.ed;
+    }
+
+    get forCrypto(): FixedBuffer32 {
+        return this.x;
+    }
 
     get hash(): number {
         return this.ed.hash;

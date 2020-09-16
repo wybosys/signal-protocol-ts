@@ -1,9 +1,11 @@
 import {Model} from "./model";
-import {KeyPair, PreKey, PrivateKey, PublicKey} from "../keypair";
+import {KeyPair, PreKey, PublicKey} from "../keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
 import {IndexedObject} from "../../../../core/kernel";
+import {HMacKeyBuffer, IvBuffer} from "../crypto";
 
 export class ChainModel extends Model {
+
     senderRatchetKey: KeyPair;
     chainKey: ChainKeyModel;
     messageKeys: MessageKeyModel[] = [];
@@ -24,9 +26,9 @@ export class ChainKeyModel extends PreKey {
 export class MessageKeyModel extends Model {
 
     index: number;
-    cpherKey: PrivateKey;
-    macKey: FixedBuffer32;
-    iv: FixedBuffer32;
+    cipherKey: KeyPair;
+    macKey: HMacKeyBuffer;
+    iv: IvBuffer;
 
     toPod(): IndexedObject {
         return null;

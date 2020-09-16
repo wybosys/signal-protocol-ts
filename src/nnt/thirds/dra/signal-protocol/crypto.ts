@@ -13,16 +13,16 @@ export type SaltBuffer = FixedBuffer32;
 export class Crypto {
 
     static Sign(buf: Buffer, key: PrivateKey): SignatureBuffer {
-        let res = nacl.sign.detached(buf, key.ed.buffer);
+        let res = nacl.sign.detached(buf, key.forSign.buffer);
         return new FixedBuffer32(res);
     }
 
     static VerifySign(buf: Buffer, sig: SignatureBuffer, key: PublicKey): boolean {
-        return nacl.sign.detached.verify(buf, sig.buffer, key.ed.buffer);
+        return nacl.sign.detached.verify(buf, sig.buffer, key.forSign.buffer);
     }
 
     static SharedKey(their: PublicKey, out: PrivateKey): SharedKeyBuffer {
-        let res = nacl.box.before(their.x.buffer, out.x.buffer);
+        let res = nacl.box.before(their.forCrypto.buffer, out.forCrypto.buffer);
         return new FixedBuffer32(res);
     }
 

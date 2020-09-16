@@ -1,17 +1,18 @@
-import {FixedBuffer32} from "../../../../core/buffer";
 import {BufferT} from "../../../../core/buffert";
-
-const SIZE = 64;
+import {PublicKey} from "../keypair";
+import {FixedBuffer32} from "../../../../core/buffer";
 
 export class DerivedRootSecrets {
 
-    private _rootKey: FixedBuffer32;
-    private _chainKey: FixedBuffer32;
+    static SIZE = 64;
+
+    private _rootKey: PublicKey;
+    private _chainKey: PublicKey;
 
     constructor(okm: Buffer) {
         let keys = BufferT.SplitAs(okm, 32, 32);
-        this._rootKey = new FixedBuffer32(keys[0]);
-        this._chainKey = new FixedBuffer32(keys[1]);
+        this._rootKey = new PublicKey(new FixedBuffer32(keys[0]));
+        this._chainKey = new PublicKey(new FixedBuffer32(keys[1]));
     }
 
     get rootKey() {

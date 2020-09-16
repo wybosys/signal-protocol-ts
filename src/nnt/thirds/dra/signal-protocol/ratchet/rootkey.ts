@@ -25,7 +25,7 @@ export class RootKey {
         let derivedSecretBytes = this._kdf.deriveSecrets(sharedSecret, Buffer.from('WhisperRatchet'), DerivedMessageSecrets.SIZE, this._key);
         let derivedSecrets = new DerivedRootSecrets(derivedSecretBytes);
 
-        let newRootKey = new RootKey(this._kdf, derivedSecrets.rootKey);
+        let newRootKey = new RootKey(this._kdf, derivedSecrets.rootKey.forSerialize);
         let newChainKey = new ChainKey(this._kdf, derivedSecrets.chainKey, 0);
 
         return make_tuple2(newRootKey, newChainKey);
