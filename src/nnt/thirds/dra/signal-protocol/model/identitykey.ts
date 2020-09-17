@@ -39,5 +39,9 @@ export class IdentityKey extends Model implements IEqualableObject, IHashObject 
     get hash(): number {
         return this._publicKey.hash;
     }
+
+    static Sort(l: IdentityKey, r: IdentityKey): number {
+        return PublicKey.Sort(l._publicKey, r._publicKey);
+    }
 }
 

@@ -1,7 +1,7 @@
-import {IdentityKey} from "../model/keypair";
-import * as crypto from 'crypto';
+import crypto = require('crypto');
 import {BufferT} from "../../../../core/buffert";
 import {ISerializableObject} from "../../../../core/object";
+import {IdentityKey} from "../model/identitykey";
 
 export class DeviceConsistencyCommitment implements ISerializableObject {
 

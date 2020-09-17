@@ -1,7 +1,8 @@
 import {IndexedObject} from "../../../../core/kernel";
 import {Model} from "./model";
+import {IEqualableObject} from "../../../../core/object";
 
-export class LogicalFingerprintModel extends Model {
+export class LogicalFingerprintModel extends Model implements IEqualableObject {
 
     content: Buffer;
 
@@ -14,6 +15,10 @@ export class LogicalFingerprintModel extends Model {
     fromPod(obj: IndexedObject): this {
         this.content = obj.content;
         return this;
+    }
+
+    isEqual(r: this): boolean {
+        return this.content.compare(r.content) == 0;
     }
 }
 
