@@ -1,5 +1,5 @@
 import {KeyPair, PrivateKey, PublicKey} from "./keypair";
-import {FixedBuffer16, FixedBuffer32, FixedBuffer64, FixedBuffer8} from "../../../core/buffer";
+import {FixedBuffer1, FixedBuffer16, FixedBuffer32, FixedBuffer64, FixedBuffer8} from "../../../core/buffer";
 import nacl = require("tweetnacl");
 
 export type AesKeyBuffer = FixedBuffer32;
@@ -9,6 +9,7 @@ export type HMacKeyBuffer = FixedBuffer32;
 export type HMacDigestBuffer = FixedBuffer8;
 export type SharedKeyBuffer = FixedBuffer32;
 export type SaltBuffer = FixedBuffer32;
+export type SeedBuffer = FixedBuffer1;
 
 export class Crypto {
 

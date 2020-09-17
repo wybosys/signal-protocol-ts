@@ -147,7 +147,7 @@ export class SignedPreKeyRecordStructureModel extends Model {
 export class SenderChainKeyModel extends Model {
 
     iteration: number;
-    seed: FixedBuffer32;
+    seed: Buffer;
 
     toPod(): IndexedObject {
         return null;
