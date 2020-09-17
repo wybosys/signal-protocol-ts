@@ -22,7 +22,7 @@ export class RootKey {
 
     createChain(theirRatchetKey: PublicKey, ourRatchetKey: KeyPair): tuple2<RootKey, ChainKey> {
         let sharedSecret = Crypto.SharedKey(theirRatchetKey, ourRatchetKey.priv);
-        let derivedSecretBytes = this._kdf.deriveSecrets(sharedSecret, Buffer.from('WhisperRatchet'), DerivedMessageSecrets.SIZE, this._key);
+        let derivedSecretBytes = this._kdf.deriveSecrets(sharedSecret.buffer, Buffer.from('WhisperRatchet'), DerivedMessageSecrets.SIZE, this._key);
         let derivedSecrets = new DerivedRootSecrets(derivedSecretBytes);
 
         let newRootKey = new RootKey(this._kdf, derivedSecrets.rootKey.forSerialize);

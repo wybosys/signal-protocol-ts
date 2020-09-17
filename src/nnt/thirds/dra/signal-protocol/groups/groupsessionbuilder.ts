@@ -2,6 +2,8 @@ import {SenderKeyStore} from "./state/senderkeystore";
 import {SenderKeyName} from "./senderkeyname";
 import {SenderKeyDistributionMessage} from "../protocol/senderkeydistributionmessage";
 import {Crypto} from "../crypto";
+import {PublicKey} from "../keypair";
+import {FixedBuffer32} from "../../../../core/buffer";
 
 export class GroupSessionBuilder {
 
@@ -29,7 +31,7 @@ export class GroupSessionBuilder {
             senderKeyRecord.setSenderKeyState(
                 Crypto.GenerateSenderKeyId(),
                 0,
-                Crypto.GenerateSenderKey(),
+                new PublicKey(Crypto.GenerateSenderKey()),
                 Crypto.GenerateSenderSigningKey()
             );
 
@@ -40,7 +42,7 @@ export class GroupSessionBuilder {
         return SenderKeyDistributionMessage.Create(
             state.keyId,
             state.getSenderChainKey().iteration,
-            state.getSenderChainKey().seed,
+            new PublicKey(new FixedBuffer32(state.getSenderChainKey().seed)),
             state.signingKeyPublic
         );
     }

@@ -43,7 +43,7 @@ export class SenderKeyRecord implements ISerializableObject {
         throw new Error(`dra: 不存在key ${keyId}`);
     }
 
-    addSenderKeyState(id: number, iteration: number, chainKey: Buffer, signatureKey: PublicKey) {
+    addSenderKeyState(id: number, iteration: number, chainKey: PublicKey, signatureKey: PublicKey) {
         ArrayT.InsertObjectAtIndex(this._senderKeyStates, SenderKeyState.CreateByKey(id, iteration, chainKey, signatureKey), 0);
 
         if (this._senderKeyStates.length > SenderKeyRecord.MAX_STATES) {
@@ -51,7 +51,7 @@ export class SenderKeyRecord implements ISerializableObject {
         }
     }
 
-    setSenderKeyState(id: number, iteration: number, chainKey: Buffer, signatureKey: KeyPair) {
+    setSenderKeyState(id: number, iteration: number, chainKey: PublicKey, signatureKey: KeyPair) {
         this._senderKeyStates.length = 0;
         this._senderKeyStates.push(SenderKeyState.CreateByKeyPair(id, iteration, chainKey, signatureKey));
     }

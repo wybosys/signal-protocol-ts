@@ -22,16 +22,16 @@ export abstract class HKDF {
         return null;
     }
 
-    deriveSecrets(inputKeyMaterial: FixedBuffer32, info: Buffer, outputLength: number, salt?: SaltBuffer): Buffer {
+    deriveSecrets(inputKeyMaterial: Buffer, info: Buffer, outputLength: number, salt?: SaltBuffer): Buffer {
         if (!salt)
             salt = new FixedBuffer32();
         let prk = this.extract(salt, inputKeyMaterial);
         return this.expand(prk, info, outputLength);
     }
 
-    private extract(salt: FixedBuffer32, inputKeyMaterial: FixedBuffer32): Buffer {
+    private extract(salt: FixedBuffer32, inputKeyMaterial: Buffer): Buffer {
         let cry = crypto.createHmac('sha256', salt.buffer);
-        cry.update(inputKeyMaterial.buffer);
+        cry.update(inputKeyMaterial);
         return cry.digest();
     }
 

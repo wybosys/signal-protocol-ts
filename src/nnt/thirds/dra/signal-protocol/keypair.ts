@@ -1,5 +1,7 @@
 import {FixedBuffer32, FixedBuffer64, FixedBufferType} from "../../../core/buffer";
-import {IComparableObject, IEqualableObject, ISerializableObject} from "../../../core/object";
+import {IComparableObject, IEqualableObject, IHashObject, IPodObject, ISerializableObject} from "../../../core/object";
+import {IndexedObject} from "../../../core/kernel";
+import {toJson, toJsonObject} from "../../../core/json";
 import ed2curve = require("ed2curve");
 
 class Ed25519PublicKey extends FixedBuffer32 {
@@ -37,13 +39,17 @@ class X25519Key extends FixedBuffer32 {
     _x25519: any;
 }
 
-export class PublicKey implements ISerializableObject, IComparableObject, IEqualableObject {
+export class PublicKey implements ISerializableObject, IComparableObject, IEqualableObject, IHashObject {
 
     constructor(buf?: FixedBuffer32) {
         if (buf) {
             this.ed = new Ed25519PublicKey(buf.buffer);
             this.x = this.ed.toX();
         }
+    }
+
+    static FromBuffer(buf: Buffer): PublicKey {
+        return new PublicKey(new FixedBuffer32(buf));
     }
 
     protected ed: Ed25519PublicKey;
@@ -66,7 +72,7 @@ export class PublicKey implements ISerializableObject, IComparableObject, IEqual
     }
 
     serialize(): Buffer {
-        return this.ed.buffer;
+        return this.forSerialize.buffer;
     }
 
     deserialize(buf: Buffer): this {
@@ -85,15 +91,23 @@ export class PublicKey implements ISerializableObject, IComparableObject, IEqual
     isEqual(r: this): boolean {
         return this.compare(r) == 0;
     }
+
+    static Sort(l: PublicKey, r: PublicKey): number {
+        return l.hash - r.hash;
+    }
 }
 
-export class PrivateKey implements ISerializableObject {
+export class PrivateKey implements ISerializableObject, IHashObject {
 
     constructor(buf?: FixedBuffer64) {
         if (buf) {
             this.ed = new Ed25519PrivateKey(buf.buffer);
             this.x = this.ed.toX();
         }
+    }
+
+    static FromBuffer(buf: Buffer): PrivateKey {
+        return new PrivateKey(new FixedBuffer64(buf));
     }
 
     protected ed: Ed25519PrivateKey;
@@ -116,7 +130,7 @@ export class PrivateKey implements ISerializableObject {
     }
 
     serialize(): Buffer {
-        return this.ed.buffer;
+        return this.forSerialize.buffer;
     }
 
     deserialize(buf: Buffer): this {
@@ -127,48 +141,78 @@ export class PrivateKey implements ISerializableObject {
         this.x = this.ed.toX();
         return this;
     }
+
+    static Sort(l: PrivateKey, r: PrivateKey) {
+        return l.hash - r.hash;
+    }
 }
 
-export class KeyPair {
+export class KeyPair implements IPodObject {
+
     pub: PublicKey;
     priv: PrivateKey;
+
+    toPod(): IndexedObject {
+        return {
+            pub: this.pub?.serialize(),
+            priv: this.priv?.serialize()
+        };
+    }
+
+    fromPod(obj: IndexedObject): this {
+        if (obj.pub)
+            this.pub = new PublicKey().deserialize(obj.pub);
+        if (obj.priv)
+            this.priv = new PrivateKey().deserialize(obj.priv);
+        return this;
+    }
 }
 
-export class PreKey {
+export class PreKey extends PublicKey implements IPodObject {
+
     index: number;
-    key: PublicKey;
+
+    toPod(): IndexedObject {
+        return {
+            index: this.index,
+            key: super.serialize()
+        };
+    }
+
+    fromPod(obj: IndexedObject): this {
+        this.index = obj.index;
+        super.deserialize(obj.key);
+        return this;
+    }
+
+    serialize(): Buffer {
+        return Buffer.from(toJson(this.toPod()));
+    }
+
+    deserialize(buf: Buffer): this {
+        return this.fromPod(toJsonObject(buf.toString()));
+    }
 }
 
 export class SignedPreKey extends PreKey {
     signature: FixedBuffer32;
+
+    toPod(): IndexedObject {
+        return {
+            ...super.toPod(),
+            signature: this.signature?.serialize()
+        };
+    }
+
+    fromPod(obj: IndexedObject): this {
+        if (obj.signature)
+            this.signature = new FixedBuffer32(obj.signature);
+        return super.fromPod(obj);
+    }
 }
 
-export class IdentityKey implements ISerializableObject, IEqualableObject {
+export class IdentityKey extends PublicKey {
 
-    key: PublicKey;
-
-    get hash(): number {
-        return this.key.hash;
-    }
-
-    serialize(): Buffer {
-        return this.key.serialize();
-    }
-
-    deserialize(buf: Buffer): this {
-        if (!this.key)
-            this.key = new PublicKey();
-        this.key.deserialize(buf);
-        return this;
-    }
-
-    isEqual(r: this): boolean {
-        return this.key.isEqual(r.key);
-    }
-
-    static Sort(l: IdentityKey, r: IdentityKey) {
-        return l.hash - r.hash;
-    }
 }
 
 export class IdentityKeyPair extends KeyPair {

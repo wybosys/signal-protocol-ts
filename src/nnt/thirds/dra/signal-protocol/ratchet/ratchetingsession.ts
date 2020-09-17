@@ -89,7 +89,7 @@ export class RatchetingSession {
 
     private static CalculateDerivedKeys(masterSecret: FixedBuffer32): DerivedKeys {
         let kdf = new HKDFv3();
-        let derivedSecretBytes = kdf.deriveSecrets(masterSecret, Buffer.from('WhisperText'), 64);
+        let derivedSecretBytes = kdf.deriveSecrets(masterSecret.buffer, Buffer.from('WhisperText'), 64);
         let derivedSecrets = BufferT.SplitAs(derivedSecretBytes, 32, 32);
         let rootKey = new RootKey(kdf, new FixedBuffer32(derivedSecrets[0]));
         let chainKey = new ChainKey(kdf, new PublicKey(new FixedBuffer32(derivedSecrets[1])), 0);

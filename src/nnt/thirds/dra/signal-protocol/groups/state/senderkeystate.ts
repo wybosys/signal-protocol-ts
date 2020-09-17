@@ -25,18 +25,18 @@ export class SenderKeyState {
         return r;
     }
 
-    static CreateByKey(id: number, iteration: number, chainKey: Buffer, signatureKey: PublicKey): SenderKeyState {
+    static CreateByKey(id: number, iteration: number, chainKey: PublicKey, signatureKey: PublicKey): SenderKeyState {
         return this.Create(id, iteration, chainKey, signatureKey, null);
     }
 
-    static CreateByKeyPair(id: number, iteration: number, chainKey: Buffer, signatureKey: KeyPair): SenderKeyState {
+    static CreateByKeyPair(id: number, iteration: number, chainKey: PublicKey, signatureKey: KeyPair): SenderKeyState {
         return this.Create(id, iteration, chainKey, signatureKey.pub, signatureKey.priv);
     }
 
-    protected static Create(id: number, iteration: number, chainKey: Buffer, signatureKeyPublic: PublicKey, signatureKeyPrivate?: PrivateKey): SenderKeyState {
+    protected static Create(id: number, iteration: number, chainKey: PublicKey, signatureKeyPublic: PublicKey, signatureKeyPrivate?: PrivateKey): SenderKeyState {
         let senderChainKeyStructure = use(new SenderChainKeyModel(), m => {
             m.iteration = iteration;
-            m.seed = chainKey;
+            m.seed = chainKey.forSerialize.buffer;
         });
 
         let signingKeyStructure = use(new SenderSigningKeyModel(), m => {

@@ -63,7 +63,7 @@ export class SessionBuilder {
         let parameters = new BobParameters();
         parameters.theirBaseKey = message.baseKey;
         parameters.theirIdentityKey = use(new IdentityKeyPair(), kp => {
-            kp.pub = message.identityKey.key;
+            kp.pub = message.identityKey;
         });
         parameters.ourIdentityKey = await this._identityKeyStore.getIdentityKeyPair();
         parameters.ourSignedPreKey = ourSignedPreKey;
@@ -75,7 +75,7 @@ export class SessionBuilder {
             parameters.ourOneTimePreKey = null;
         }
 
-        if (!sessionRecord.isFresh) {
+        if (!sessionRecord.isFresh()) {
             sessionRecord.archiveCurrentState();
         }
 
@@ -113,7 +113,7 @@ export class SessionBuilder {
         let ourBaseKey = Crypto.GenerateKeyPair();
         let theirSignedPreKey = preKey.signedPreKey;
         let theirOneTimePreKey = preKey.preKey;
-        let theirOneTimePreKeyId = theirOneTimePreKey ? theirOneTimePreKey.id : null;
+        let theirOneTimePreKeyId = theirOneTimePreKey ? preKey.preKeyId : null;
 
         let parameters = new AliceParameters();
         parameters.ourBaseKey = ourBaseKey;
@@ -123,7 +123,7 @@ export class SessionBuilder {
         parameters.theirRatchetKey = theirSignedPreKey;
         parameters.theirOneTimePreKey = theirOneTimePreKey;
 
-        if (!sessionRecord.isFresh) {
+        if (!sessionRecord.isFresh()) {
             sessionRecord.archiveCurrentState();
         }
 

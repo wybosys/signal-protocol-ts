@@ -9,11 +9,11 @@ const CHAIN_KEY_SEED = BufferT.FromInt8(0x02);
 export class SenderChainKey {
 
     private _iteration: number;
-    private _chainKey: Buffer;
+    private _seed: Buffer;
 
-    constructor(iteration: number, chainKey: Buffer) {
+    constructor(iteration: number, seed: Buffer) {
         this._iteration = iteration;
-        this._chainKey = chainKey;
+        this._seed = seed;
     }
 
     get iteration() {
@@ -21,19 +21,23 @@ export class SenderChainKey {
     }
 
     getSenderMessageKey() {
-        return new SenderMessageKey(this._iteration, this.getDerivative(MESSAGE_KEY_SEED, this._chainKey));
+        return new SenderMessageKey(
+            this._iteration,
+            this.getDerivative(MESSAGE_KEY_SEED));
     }
 
     getNext() {
-        return new SenderChainKey(this._iteration + 1, this.getDerivative(CHAIN_KEY_SEED, this._chainKey));
+        return new SenderChainKey(
+            this._iteration + 1,
+            this.getDerivative(CHAIN_KEY_SEED));
     }
 
     get seed() {
-        return this._chainKey;
+        return this._seed;
     }
 
-    private getDerivative(seed: Buffer, key: Buffer): Buffer {
-        let cry = crypto.createHmac('sha256', key);
+    private getDerivative(seed: Buffer): Buffer {
+        let cry = crypto.createHmac('sha256', this._seed);
         cry.update(seed);
         return cry.digest();
     }

@@ -66,7 +66,7 @@ export class SessionRecord implements ISerializableObject {
         this._previousStates.length = 0;
     }
 
-    get isFresh() {
+    isFresh() {
         return this._fresh;
     }
 

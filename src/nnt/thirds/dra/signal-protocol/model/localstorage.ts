@@ -150,10 +150,15 @@ export class SenderChainKeyModel extends Model {
     seed: Buffer;
 
     toPod(): IndexedObject {
-        return null;
+        return {
+            iteration: this.iteration,
+            seed: this.seed
+        };
     }
 
     fromPod(obj: IndexedObject): this {
+        this.iteration = obj.iteration;
+        this.seed = obj.seed;
         return this;
     }
 }
@@ -161,13 +166,18 @@ export class SenderChainKeyModel extends Model {
 export class SenderMessageKeyModel extends Model {
 
     iteration: number;
-    seed: FixedBuffer32;
+    seed: Buffer;
 
     toPod(): IndexedObject {
-        return null;
+        return {
+            iteration: this.iteration,
+            seed: this.seed
+        };
     }
 
     fromPod(obj: IndexedObject): this {
+        this.iteration = obj.iteration;
+        this.seed = obj.seed;
         return this;
     }
 }
