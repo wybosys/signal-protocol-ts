@@ -1,6 +1,5 @@
 import {BufferT} from "../../../../core/buffert";
-import {PublicKey} from "../model/keypair";
-import {FixedBuffer32} from "../../../../core/buffer";
+import {PublicKey} from "../model/publickey";
 
 export class DerivedRootSecrets {
 
@@ -11,8 +10,8 @@ export class DerivedRootSecrets {
 
     constructor(okm: Buffer) {
         let keys = BufferT.SplitAs(okm, 32, 32);
-        this._rootKey = new PublicKey(new FixedBuffer32(keys[0]));
-        this._chainKey = new PublicKey(new FixedBuffer32(keys[1]));
+        this._rootKey = PublicKey.FromBuffer(keys[0]);
+        this._chainKey = PublicKey.FromBuffer(keys[1]);
     }
 
     get rootKey() {

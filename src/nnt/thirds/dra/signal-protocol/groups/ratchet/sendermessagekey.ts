@@ -1,5 +1,4 @@
 import {IvBuffer} from "../../crypto";
-import {KeyPair, PublicKey} from "../../model/keypair";
 import {HKDFv3} from "../../kdf/HKDFv3";
 import {BufferT} from "../../../../../core/buffert";
 import {FixedBuffer16} from "../../../../../core/buffer";
@@ -8,7 +7,7 @@ export class SenderMessageKey {
 
     private _iteration: number;
     private _iv: IvBuffer;
-    private _cipherKey: KeyPair;
+    private _cipherKey: Buffer;
     private _seed: Buffer;
 
     constructor(iteration: number, seed: Buffer) {
@@ -18,10 +17,7 @@ export class SenderMessageKey {
         this._iteration = iteration;
         this._seed = seed;
         this._iv = new FixedBuffer16(parts[0]);
-
-        let kp = new KeyPair();
-        kp.pub = PublicKey.FromBuffer(parts[1]);
-        this._cipherKey = kp;
+        this._cipherKey = parts[1];
     }
 
     get iteration() {

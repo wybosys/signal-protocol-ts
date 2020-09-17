@@ -3,7 +3,6 @@ import {PublicKey} from "./publickey";
 import {PrivateKey} from "./privatekey";
 import {Model} from "./model";
 
-
 export class KeyPair extends Model {
 
     publicKey: PublicKey;

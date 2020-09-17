@@ -4,11 +4,13 @@ import {
     SenderMessageKeyModel,
     SenderSigningKeyModel
 } from "../../model/localstorage";
-import {KeyPair, PrivateKey, PublicKey} from "../../model/keypair";
+import {KeyPair} from "../../model/keypair";
 import {use} from "../../../../../core/kernel";
 import {SenderChainKey} from "../ratchet/senderchainkey";
 import {SenderMessageKey} from "../ratchet/sendermessagekey";
 import {ArrayT} from "../../../../../core/arrayt";
+import {PublicKey} from "../../model/publickey";
+import {PrivateKey} from "../../model/privatekey";
 
 export class SenderKeyState {
 
@@ -25,23 +27,23 @@ export class SenderKeyState {
         return r;
     }
 
-    static CreateByKey(id: number, iteration: number, chainKey: PublicKey, signatureKey: PublicKey): SenderKeyState {
+    static CreateByKey(id: number, iteration: number, chainKey: Buffer, signatureKey: PublicKey): SenderKeyState {
         return this.Create(id, iteration, chainKey, signatureKey, null);
     }
 
-    static CreateByKeyPair(id: number, iteration: number, chainKey: PublicKey, signatureKey: KeyPair): SenderKeyState {
-        return this.Create(id, iteration, chainKey, signatureKey.pub, signatureKey.priv);
+    static CreateByKeyPair(id: number, iteration: number, chainKey: Buffer, signatureKey: KeyPair): SenderKeyState {
+        return this.Create(id, iteration, chainKey, signatureKey.publicKey, signatureKey.privateKey);
     }
 
-    protected static Create(id: number, iteration: number, chainKey: PublicKey, signatureKeyPublic: PublicKey, signatureKeyPrivate?: PrivateKey): SenderKeyState {
+    protected static Create(id: number, iteration: number, chainKey: Buffer, signatureKeyPublic: PublicKey, signatureKeyPrivate?: PrivateKey): SenderKeyState {
         let senderChainKeyStructure = use(new SenderChainKeyModel(), m => {
             m.iteration = iteration;
-            m.seed = chainKey.forSerialize.buffer;
+            m.seed = chainKey;
         });
 
         let signingKeyStructure = use(new SenderSigningKeyModel(), m => {
-            m.pub = signatureKeyPublic;
-            m.priv = signatureKeyPrivate;
+            m.publicKey = signatureKeyPublic;
+            m.privateKey = signatureKeyPrivate;
         });
 
         let r = new SenderKeyState();
@@ -72,11 +74,11 @@ export class SenderKeyState {
     }
 
     get signingKeyPublic() {
-        return this._senderKeyStateStructure.senderSigningKey.pub;
+        return this._senderKeyStateStructure.senderSigningKey.publicKey;
     }
 
     get signingKeyPrivate() {
-        return this._senderKeyStateStructure.senderSigningKey.priv;
+        return this._senderKeyStateStructure.senderSigningKey.privateKey;
     }
 
     hasSenderMessageKey(iteration: number): boolean {

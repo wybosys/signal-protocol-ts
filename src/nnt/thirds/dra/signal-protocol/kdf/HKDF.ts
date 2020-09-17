@@ -6,9 +6,9 @@ import {BytesBuilder} from "../../../../core/bytes";
 import {BufferT} from "../../../../core/buffert";
 import {SaltBuffer} from "../crypto";
 
-const HASH_OUTPUT_SIZE = 32;
-
 export abstract class HKDF {
+
+    static HASH_OUTPUT_SIZE = 32;
 
     static CreateFor(messageVersion: number): HKDF {
         switch (messageVersion) {
@@ -36,7 +36,7 @@ export abstract class HKDF {
     }
 
     private expand(prk: Buffer, info: Buffer, outputSize: number): Buffer {
-        let iterations = Math.ceil(outputSize / HASH_OUTPUT_SIZE);
+        let iterations = Math.ceil(outputSize / HKDF.HASH_OUTPUT_SIZE);
         let mixin = Buffer.allocUnsafe(0);
 
         let results = new BytesBuilder();

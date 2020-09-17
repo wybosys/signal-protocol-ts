@@ -4,6 +4,7 @@ import {SenderKeyState} from "./state/senderkeystate";
 import {SenderMessageKey} from "./ratchet/sendermessagekey";
 import {SenderKeyMessage} from "../protocol/senderkeymessage";
 import {AesKeyBuffer, IvBuffer} from "../crypto";
+import {FixedBuffer32} from "../../../../core/buffer";
 import crypto = require('crypto');
 
 export class GroupCipher {
@@ -20,7 +21,7 @@ export class GroupCipher {
         let record = await this._senderKeyStore.loadSenderKey(this._senderKeyId);
         let senderKeyState = record.getSenderKeyState();
         let senderKey = senderKeyState.getSenderChainKey().getSenderMessageKey();
-        let ciphertext = this.getCipherText(senderKey.iv, senderKey.cipherKey.pub.forSerialize, paddedPlaintext);
+        let ciphertext = GroupCipher.GetCipherText(senderKey.iv, new FixedBuffer32(senderKey.cipherKey), paddedPlaintext);
 
         let senderKeyMessage = SenderKeyMessage.Create(
             senderKeyState.keyId,
@@ -50,7 +51,7 @@ export class GroupCipher {
 
         let senderKey = this.getSenderKey(senderKeyState, senderKeyMessage.iteration);
 
-        let plaintext = this.getPlainText(senderKey.iv, senderKey.cipherKey.pub.forSerialize, senderKeyMessage.ciphertext);
+        let plaintext = GroupCipher.GetPlainText(senderKey.iv, new FixedBuffer32(senderKey.cipherKey), senderKeyMessage.ciphertext);
 
         await this._senderKeyStore.storeSenderKey(this._senderKeyId, record);
 
@@ -80,13 +81,13 @@ export class GroupCipher {
         return senderChainKey.getSenderMessageKey();
     }
 
-    private getPlainText(iv: IvBuffer, key: AesKeyBuffer, ciphertext: Buffer): Buffer {
+    private static GetPlainText(iv: IvBuffer, key: AesKeyBuffer, ciphertext: Buffer): Buffer {
         let cry = crypto.createDecipheriv('aes-128-cbc', key.buffer, iv.buffer);
         cry.update(ciphertext);
         return cry.final();
     }
 
-    private getCipherText(iv: IvBuffer, key: AesKeyBuffer, plaintext: Buffer): Buffer {
+    private static GetCipherText(iv: IvBuffer, key: AesKeyBuffer, plaintext: Buffer): Buffer {
         let cry = crypto.createCipheriv('aes-128-cbc', key.buffer, iv.buffer);
         cry.update(plaintext);
         return cry.final();

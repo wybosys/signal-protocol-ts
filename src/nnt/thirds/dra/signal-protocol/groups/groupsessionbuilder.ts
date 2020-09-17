@@ -2,8 +2,8 @@ import {SenderKeyStore} from "./state/senderkeystore";
 import {SenderKeyName} from "./senderkeyname";
 import {SenderKeyDistributionMessage} from "../protocol/senderkeydistributionmessage";
 import {Crypto} from "../crypto";
-import {PublicKey} from "../model/keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
+import {PublicKey} from "../model/publickey";
 
 export class GroupSessionBuilder {
 

@@ -22,7 +22,7 @@ export class LogicalFingerprintModel extends Model implements IEqualableObject {
     }
 }
 
-export class CombinedFingerprintsModel extends Model {
+export class CombinedFingerprintsModel extends Model implements IEqualableObject {
 
     version: number;
     local: LogicalFingerprintModel;
@@ -31,17 +31,20 @@ export class CombinedFingerprintsModel extends Model {
     toPod(): IndexedObject {
         return {
             version: this.version,
-            local: this.local?.toPod(),
-            remote: this.remote?.toPod()
+            local: this.local.toPod(),
+            remote: this.remote.toPod()
         };
     }
 
     fromPod(obj: IndexedObject): this {
         this.version = obj.version;
-        if (obj.local)
-            this.local = new LogicalFingerprintModel().fromPod(obj.local);
-        if (obj.remote)
-            this.remote = new LogicalFingerprintModel().fromPod(obj.remote);
+        this.local = new LogicalFingerprintModel().fromPod(obj.local);
+        this.remote = new LogicalFingerprintModel().fromPod(obj.remote);
         return this;
+    }
+
+    isEqual(r: this): boolean {
+        return this.version == r.version &&
+            this.local.isEqual(r.local) && this.remote.isEqual(r.remote);
     }
 }

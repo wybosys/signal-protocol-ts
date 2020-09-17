@@ -33,7 +33,6 @@ export class ScannableFingerprint implements ISerializableObject, IEqualableObje
     }
 
     isEqual(r: this): boolean {
-        return this._fingerprints.local.isEqual(r._fingerprints.local) &&
-            this._fingerprints.remote.isEqual(r._fingerprints.remote);
+        return this._fingerprints.isEqual(r._fingerprints);
     }
 }
