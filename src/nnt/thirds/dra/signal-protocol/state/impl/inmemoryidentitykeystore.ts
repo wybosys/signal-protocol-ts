@@ -1,6 +1,7 @@
 import {Direction, IdentityKeyStore} from "../identitykeystore";
-import {IdentityKey, IdentityKeyPair} from "../../model/keypair";
 import {Address} from "../../address";
+import {IdentityKey} from "../../model/identitykey";
+import {IdentityKeyPair} from "../../model/identitykeypair";
 
 export class InMemoryIdentityKeyStore implements IdentityKeyStore {
 

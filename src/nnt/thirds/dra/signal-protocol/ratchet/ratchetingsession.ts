@@ -2,7 +2,6 @@ import {SessionState} from "../state/sessionstate";
 import {AliceParameters} from "./aliceparameters";
 import {use} from "../../../../core/kernel";
 import {SymmetricParameters} from "./symmetricparameters";
-import {PublicKey} from "../model/keypair";
 import {RootKey} from "./rootkey";
 import {ChainKey} from "./chainkey";
 import {FixedBuffer32} from "../../../../core/buffer";
@@ -12,11 +11,12 @@ import {BobParameters} from "./bobparameters";
 import {CiphertextMessage} from "../protocol/ciphertextmessage";
 import {Crypto} from "../crypto";
 import {BytesBuilder} from "../../../../core/bytes";
+import {PublicKey} from "../model/publickey";
 
 export class RatchetingSession {
 
     static InitSymmetricSession(sessionState: SessionState, parameters: SymmetricParameters) {
-        if (this.IsAlice(parameters.ourBaseKey.pub, parameters.theirBaseKey)) {
+        if (this.IsAlice(parameters.ourBaseKey.publicKey, parameters.theirBaseKey)) {
             let aliceParameters = use(new AliceParameters(), p => {
                 p.ourBaseKey = parameters.ourBaseKey;
                 p.ourIdentityKey = parameters.ourIdentityKey;
@@ -40,19 +40,19 @@ export class RatchetingSession {
 
     static InitAliceSession(sessionState: SessionState, parameters: AliceParameters) {
         sessionState.sessionVersion = CiphertextMessage.CURRENT_VERSION;
-        sessionState.remoteIdentityKey = parameters.theirIdentityKey.pub;
-        sessionState.localIdentityKey = parameters.ourIdentityKey.pub;
+        sessionState.remoteIdentityKey = parameters.theirIdentityKey.publicKey;
+        sessionState.localIdentityKey = parameters.ourIdentityKey.publicKey;
 
         let sendingRatchetKey = Crypto.GenerateKeyPair();
         let secrets = new BytesBuilder();
 
         secrets.addBuffer(this.GetDiscontinuityBytes());
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirSignedPreKey, parameters.ourIdentityKey.priv).buffer);
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirIdentityKey.pub, parameters.ourBaseKey.priv).buffer);
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirSignedPreKey, parameters.ourBaseKey.priv).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirSignedPreKey, parameters.ourIdentityKey.privateKey).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirIdentityKey.publicKey, parameters.ourBaseKey.privateKey).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirSignedPreKey, parameters.ourBaseKey.privateKey).buffer);
 
         if (parameters.theirOneTimePreKey) {
-            secrets.addBuffer(Crypto.SharedKey(parameters.theirOneTimePreKey, parameters.ourBaseKey.priv).buffer);
+            secrets.addBuffer(Crypto.SharedKey(parameters.theirOneTimePreKey, parameters.ourBaseKey.privateKey).buffer);
         }
 
         let derivedKeys = this.CalculateDerivedKeys(new FixedBuffer32(secrets.buffer));
@@ -65,16 +65,16 @@ export class RatchetingSession {
 
     static InitBobSession(sessionState: SessionState, parameters: BobParameters) {
         sessionState.sessionVersion = CiphertextMessage.CURRENT_VERSION;
-        sessionState.remoteIdentityKey = parameters.theirIdentityKey.pub;
+        sessionState.remoteIdentityKey = parameters.theirIdentityKey.publicKey;
 
         let secrets = new BytesBuilder();
         secrets.addBuffer(this.GetDiscontinuityBytes());
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirIdentityKey.pub, parameters.ourSignedPreKey.priv).buffer);
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourIdentityKey.priv).buffer);
-        secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourSignedPreKey.priv).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirIdentityKey.publicKey, parameters.ourSignedPreKey.privateKey).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourIdentityKey.privateKey).buffer);
+        secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourSignedPreKey.privateKey).buffer);
 
         if (parameters.ourOneTimePreKey) {
-            secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourOneTimePreKey.priv).buffer);
+            secrets.addBuffer(Crypto.SharedKey(parameters.theirBaseKey, parameters.ourOneTimePreKey.privateKey).buffer);
         }
 
         let derivedKeys = this.CalculateDerivedKeys(new FixedBuffer32(secrets.buffer));

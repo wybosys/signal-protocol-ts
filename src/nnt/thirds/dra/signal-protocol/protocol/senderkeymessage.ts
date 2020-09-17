@@ -1,10 +1,11 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
 import {BufferT} from "../../../../core/buffert";
 import {SenderKeyMessageModel} from "../model/whispertext";
-import {PrivateKey, PublicKey} from "../model/keypair";
 import {lambda} from "../../../../core/kernel";
 import {Crypto, SignatureBuffer} from "../crypto";
 import {FixedBuffer32} from "../../../../core/buffer";
+import {PrivateKey} from "../model/privatekey";
+import {PublicKey} from "../model/publickey";
 
 const SIGNATURE_LENGTH = 64;
 

@@ -1,9 +1,12 @@
-import {IdentityKeyPair, KeyPair, PrivateKey, PublicKey} from "./model/keypair";
+import {KeyPair} from "./model/keypair";
 import {FixedBuffer1, FixedBuffer16, FixedBuffer32, FixedBuffer64, FixedBuffer8} from "../../../core/buffer";
 import {Random} from "../../../core/random";
 import {MAX_INT} from "../../../core/kernel";
 import {PreKeyRecord} from "./state/prekeyrecord";
 import {SignedPreKeyRecord} from "./state/signedprekeyrecord";
+import {PublicKey} from "./model/publickey";
+import {PrivateKey} from "./model/privatekey";
+import {IdentityKeyPair} from "./model/identitykeypair";
 import nacl = require("tweetnacl");
 
 export type AesKeyBuffer = FixedBuffer32;
@@ -20,8 +23,8 @@ export class Crypto {
     static GenerateKeyPair(): KeyPair {
         let r = new KeyPair();
         let kp = nacl.sign.keyPair();
-        r.pub = new PublicKey(new FixedBuffer32(kp.publicKey));
-        r.priv = new PrivateKey(new FixedBuffer64(kp.secretKey));
+        r.publicKey = new PublicKey(new FixedBuffer32(kp.publicKey));
+        r.privateKey = new PrivateKey(new FixedBuffer64(kp.secretKey));
         return r;
     }
 
@@ -51,7 +54,7 @@ export class Crypto {
 
     static GenerateSignedPreKey(identityKeyPair: IdentityKeyPair, signedPreKeyId: number): SignedPreKeyRecord {
         let keyPair = this.GenerateKeyPair();
-        let signature = this.Sign(identityKeyPair.priv.forSerialize.buffer, keyPair.priv);
+        let signature = this.Sign(identityKeyPair.privateKey.forSerialize.buffer, keyPair.privateKey);
         let now = new Date().getTime();
         return SignedPreKeyRecord.Create(signedPreKeyId, now, keyPair, signature);
     }

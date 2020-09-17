@@ -1,5 +1,6 @@
-import {IdentityKey, IdentityKeyPair} from "../model/keypair";
 import {Address} from "../address";
+import {IdentityKeyPair} from "../model/identitykeypair";
+import {IdentityKey} from "../model/identitykey";
 
 export enum Direction {
     SENDING = 0,

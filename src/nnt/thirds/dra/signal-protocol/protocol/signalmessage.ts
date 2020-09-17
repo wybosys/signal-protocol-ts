@@ -1,10 +1,11 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
-import {IdentityKey, PublicKey} from "../model/keypair";
 import {BufferT} from "../../../../core/buffert";
 import {SignalMessageModel} from "../model/whispertext";
 import {FixedBuffer32, FixedBuffer8} from "../../../../core/buffer";
 import {lambda} from "../../../../core/kernel";
 import {HMacDigestBuffer, HMacKeyBuffer} from "../crypto";
+import {PublicKey} from "../model/publickey";
+import {IdentityKey} from "../model/identitykey";
 import crypto = require('crypto');
 
 const MAC_LENGTH = 8;
@@ -104,8 +105,8 @@ export class SignalMessage extends CiphertextMessage {
 
     static GetMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer, serialized: BufferT): HMacDigestBuffer {
         let cry = crypto.createHmac('sha256', macKey.buffer);
-        cry.update(senderIdentityKey.forSerialize.buffer);
-        cry.update(receiverIdentityKey.forSerialize.buffer);
+        cry.update(senderIdentityKey.publicKey.forSerialize.buffer);
+        cry.update(receiverIdentityKey.publicKey.forSerialize.buffer);
         let fullMac = cry.digest();
         return new FixedBuffer8(fullMac.slice(0, MAC_LENGTH));
     }

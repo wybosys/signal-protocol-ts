@@ -1,15 +1,15 @@
 import {DeviceConsistencySignature} from "../devices/deviceconsistencysignature";
 import {ISerializableObject} from "../../../../core/object";
 import {DeviceConsistencyCommitment} from "../devices/deviceconsistencycommitment";
-import {IdentityKeyPair} from "../model/keypair";
 import {Crypto} from "../crypto";
 import {DeviceConsistencyCodeMessageModel} from "../model/whispertext";
+import {IdentityKeyPair} from "../model/identitykeypair";
 
 
 export class DeviceConsistencyMessage implements ISerializableObject {
 
     static Create(commitment: DeviceConsistencyCommitment, identityKeyPair: IdentityKeyPair): DeviceConsistencyMessage {
-        let sign = Crypto.Sign(commitment.serialize(), identityKeyPair.priv);
+        let sign = Crypto.Sign(commitment.serialize(), identityKeyPair.privateKey);
 
         let r = new DeviceConsistencyMessage();
         r._generation = commitment.generation;

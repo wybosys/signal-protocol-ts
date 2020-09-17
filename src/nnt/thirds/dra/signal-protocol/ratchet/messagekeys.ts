@@ -1,14 +1,13 @@
-import {HMacKeyBuffer, IvBuffer} from "../crypto";
-import {KeyPair} from "../model/keypair";
+import {AesKeyBuffer, HMacKeyBuffer, IvBuffer} from "../crypto";
 
 export class MessageKeys {
 
-    private _cipherKey: KeyPair;
+    private _cipherKey: AesKeyBuffer;
     private _macKey: HMacKeyBuffer;
     private _iv: IvBuffer;
     private _counter: number;
 
-    constructor(cipherKey: KeyPair, macKey: HMacKeyBuffer, iv: IvBuffer, counter: number) {
+    constructor(cipherKey: AesKeyBuffer, macKey: HMacKeyBuffer, iv: IvBuffer, counter: number) {
         this._cipherKey = cipherKey;
         this._macKey = macKey;
         this._iv = iv;

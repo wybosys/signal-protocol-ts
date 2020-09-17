@@ -1,8 +1,9 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
-import {IdentityKey, PublicKey} from "../model/keypair";
 import {PreKeySignalMessageModel} from "../model/whispertext";
 import {SignalMessage} from "./signalmessage";
 import {BufferT} from "../../../../core/buffert";
+import {PublicKey} from "../model/publickey";
+import {IdentityKey} from "../model/identitykey";
 
 export class PreKeySignalMessage extends CiphertextMessage {
 

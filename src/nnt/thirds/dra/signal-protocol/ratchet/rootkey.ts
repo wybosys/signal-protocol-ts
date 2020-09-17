@@ -1,10 +1,11 @@
 import {HKDF} from "../kdf/HKDF";
-import {KeyPair, PublicKey} from "../model/keypair";
+import {KeyPair} from "../model/keypair";
 import {make_tuple2, tuple2} from "../../../../core/kernel";
 import {ChainKey} from "./chainkey";
 import {Crypto, SaltBuffer} from "../crypto";
 import {DerivedMessageSecrets} from "../kdf/derivedmessagesecrets";
 import {DerivedRootSecrets} from "../kdf/derivedrootsecrets";
+import {PublicKey} from "../model/publickey";
 
 export class RootKey {
 
@@ -21,7 +22,7 @@ export class RootKey {
     }
 
     createChain(theirRatchetKey: PublicKey, ourRatchetKey: KeyPair): tuple2<RootKey, ChainKey> {
-        let sharedSecret = Crypto.SharedKey(theirRatchetKey, ourRatchetKey.priv);
+        let sharedSecret = Crypto.SharedKey(theirRatchetKey, ourRatchetKey.privateKey);
         let derivedSecretBytes = this._kdf.deriveSecrets(sharedSecret.buffer, Buffer.from('WhisperRatchet'), DerivedMessageSecrets.SIZE, this._key);
         let derivedSecrets = new DerivedRootSecrets(derivedSecretBytes);
 
