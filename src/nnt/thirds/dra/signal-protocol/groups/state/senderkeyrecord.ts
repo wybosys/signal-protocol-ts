@@ -1,7 +1,7 @@
 import {SenderKeyState} from "./senderkeystate";
 import {SenderKeyRecordStructureModel} from "../../model/localstorage";
 import {ArrayT} from "../../../../../core/arrayt";
-import {KeyPair, PublicKey} from "../../keypair";
+import {KeyPair, PublicKey} from "../../model/keypair";
 import {ISerializableObject} from "../../../../../core/object";
 
 export class SenderKeyRecord implements ISerializableObject {

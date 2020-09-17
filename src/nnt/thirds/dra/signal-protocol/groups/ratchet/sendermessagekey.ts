@@ -1,5 +1,5 @@
 import {IvBuffer} from "../../crypto";
-import {KeyPair, PublicKey} from "../../keypair";
+import {KeyPair, PublicKey} from "../../model/keypair";
 import {HKDFv3} from "../../kdf/HKDFv3";
 import {BufferT} from "../../../../../core/buffert";
 import {FixedBuffer16} from "../../../../../core/buffer";

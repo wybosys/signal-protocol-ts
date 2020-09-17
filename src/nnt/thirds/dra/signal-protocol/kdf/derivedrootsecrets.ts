@@ -1,5 +1,5 @@
 import {BufferT} from "../../../../core/buffert";
-import {PublicKey} from "../keypair";
+import {PublicKey} from "../model/keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
 
 export class DerivedRootSecrets {

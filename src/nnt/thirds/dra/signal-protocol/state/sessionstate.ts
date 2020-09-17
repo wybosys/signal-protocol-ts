@@ -6,7 +6,7 @@ import {
     PendingPreKeyModel,
     SessionStructureModel
 } from "../model/localstorage";
-import {IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
+import {IdentityKeyPair, KeyPair, PublicKey} from "../model/keypair";
 import {RootKey} from "../ratchet/rootkey";
 import {HKDF} from "../kdf/HKDF";
 import {make_tuple2, tuple2, use} from "../../../../core/kernel";

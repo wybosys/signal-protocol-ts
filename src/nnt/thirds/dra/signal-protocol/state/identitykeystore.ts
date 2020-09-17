@@ -1,4 +1,4 @@
-import {IdentityKey, IdentityKeyPair} from "../keypair";
+import {IdentityKey, IdentityKeyPair} from "../model/keypair";
 import {Address} from "../address";
 
 export enum Direction {

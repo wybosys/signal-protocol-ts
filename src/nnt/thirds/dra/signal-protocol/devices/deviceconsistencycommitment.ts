@@ -1,4 +1,4 @@
-import {IdentityKey} from "../keypair";
+import {IdentityKey} from "../model/keypair";
 import * as crypto from 'crypto';
 import {BufferT} from "../../../../core/buffert";
 import {ISerializableObject} from "../../../../core/object";

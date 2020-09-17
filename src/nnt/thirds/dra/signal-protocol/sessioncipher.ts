@@ -12,7 +12,7 @@ import {PreKeySignalMessage} from "./protocol/prekeysignalmessage";
 import {SessionRecord} from "./state/sessionrecord";
 import {SessionState} from "./state/sessionstate";
 import {ArrayT} from "../../../core/arrayt";
-import {PublicKey} from "./keypair";
+import {PublicKey} from "./model/keypair";
 import {ChainKey} from "./ratchet/chainkey";
 import {Crypto} from "./crypto";
 import crypto = require('crypto');

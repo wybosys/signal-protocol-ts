@@ -2,7 +2,7 @@ import {SessionState} from "../state/sessionstate";
 import {AliceParameters} from "./aliceparameters";
 import {use} from "../../../../core/kernel";
 import {SymmetricParameters} from "./symmetricparameters";
-import {PublicKey} from "../keypair";
+import {PublicKey} from "../model/keypair";
 import {RootKey} from "./rootkey";
 import {ChainKey} from "./chainkey";
 import {FixedBuffer32} from "../../../../core/buffer";

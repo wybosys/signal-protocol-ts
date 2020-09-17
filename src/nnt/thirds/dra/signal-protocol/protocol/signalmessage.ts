@@ -1,5 +1,5 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
-import {IdentityKey, PublicKey} from "../keypair";
+import {IdentityKey, PublicKey} from "../model/keypair";
 import {BufferT} from "../../../../core/buffert";
 import {SignalMessageModel} from "../model/whispertext";
 import {FixedBuffer32, FixedBuffer8} from "../../../../core/buffer";

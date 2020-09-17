@@ -1,7 +1,7 @@
 import {DeviceConsistencySignature} from "../devices/deviceconsistencysignature";
 import {ISerializableObject} from "../../../../core/object";
 import {DeviceConsistencyCommitment} from "../devices/deviceconsistencycommitment";
-import {IdentityKeyPair} from "../keypair";
+import {IdentityKeyPair} from "../model/keypair";
 import {Crypto} from "../crypto";
 import {DeviceConsistencyCodeMessageModel} from "../model/whispertext";
 

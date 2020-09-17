@@ -2,7 +2,7 @@ import {BufferT} from "../../../../core/buffert";
 import {HKDF} from "../kdf/HKDF";
 import {MessageKeys} from "./messagekeys";
 import {DerivedMessageSecrets} from "../kdf/derivedmessagesecrets";
-import {PublicKey} from "../keypair";
+import {PublicKey} from "../model/keypair";
 import crypto = require('crypto');
 
 const MESSAGE_KEY_SEED = BufferT.FromInt8(0x01);

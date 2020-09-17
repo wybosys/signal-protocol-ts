@@ -1,4 +1,4 @@
-import {IdentityKey, PublicKey} from "../keypair";
+import {IdentityKey, PublicKey} from "../model/keypair";
 import {SignatureBuffer} from "../crypto";
 
 export class PreKeyBundle {

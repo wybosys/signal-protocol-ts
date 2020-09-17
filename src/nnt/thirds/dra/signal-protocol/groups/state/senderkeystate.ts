@@ -4,7 +4,7 @@ import {
     SenderMessageKeyModel,
     SenderSigningKeyModel
 } from "../../model/localstorage";
-import {KeyPair, PrivateKey, PublicKey} from "../../keypair";
+import {KeyPair, PrivateKey, PublicKey} from "../../model/keypair";
 import {use} from "../../../../../core/kernel";
 import {SenderChainKey} from "../ratchet/senderchainkey";
 import {SenderMessageKey} from "../ratchet/sendermessagekey";

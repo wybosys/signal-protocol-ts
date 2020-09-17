@@ -1,5 +1,5 @@
 import {HMacKeyBuffer, IvBuffer} from "../crypto";
-import {KeyPair} from "../keypair";
+import {KeyPair} from "../model/keypair";
 
 export class MessageKeys {
 

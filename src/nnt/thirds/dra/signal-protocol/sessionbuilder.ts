@@ -8,7 +8,7 @@ import {SessionRecord} from "./state/sessionrecord";
 import {PreKeySignalMessage} from "./protocol/prekeysignalmessage";
 import {use} from "../../../core/kernel";
 import {BobParameters} from "./ratchet/bobparameters";
-import {IdentityKeyPair} from "./keypair";
+import {IdentityKeyPair} from "./model/keypair";
 import {RatchetingSession} from "./ratchet/ratchetingsession";
 import {PreKeyBundle} from "./state/prekeybundle";
 import {Crypto} from "./crypto";

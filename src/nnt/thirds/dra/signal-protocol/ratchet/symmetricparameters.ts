@@ -1,4 +1,4 @@
-import {IdentityKeyPair, KeyPair, PublicKey} from "../keypair";
+import {IdentityKeyPair, KeyPair, PublicKey} from "../model/keypair";
 
 export class SymmetricParameters {
 

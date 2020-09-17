@@ -1,5 +1,5 @@
 import {SignedPreKeyRecordStructureModel} from "../model/localstorage";
-import {KeyPair} from "../keypair";
+import {KeyPair} from "../model/keypair";
 import {SignatureBuffer} from "../crypto";
 import {use} from "../../../../core/kernel";
 import {ISerializableObject} from "../../../../core/object";

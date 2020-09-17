@@ -1,5 +1,5 @@
 import {Model} from "./model";
-import {IdentityKey, PublicKey} from "../keypair";
+import {IdentityKey, PublicKey} from "./keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
 import {SignatureBuffer} from "../crypto";
 import {IndexedObject} from "../../../../core/kernel";

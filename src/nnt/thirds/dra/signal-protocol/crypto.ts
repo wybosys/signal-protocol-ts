@@ -1,4 +1,4 @@
-import {IdentityKeyPair, KeyPair, PrivateKey, PublicKey} from "./keypair";
+import {IdentityKeyPair, KeyPair, PrivateKey, PublicKey} from "./model/keypair";
 import {FixedBuffer1, FixedBuffer16, FixedBuffer32, FixedBuffer64, FixedBuffer8} from "../../../core/buffer";
 import {Random} from "../../../core/random";
 import {MAX_INT} from "../../../core/kernel";

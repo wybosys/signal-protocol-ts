@@ -1,5 +1,5 @@
 import {HKDF} from "../kdf/HKDF";
-import {KeyPair, PublicKey} from "../keypair";
+import {KeyPair, PublicKey} from "../model/keypair";
 import {make_tuple2, tuple2} from "../../../../core/kernel";
 import {ChainKey} from "./chainkey";
 import {Crypto, SaltBuffer} from "../crypto";

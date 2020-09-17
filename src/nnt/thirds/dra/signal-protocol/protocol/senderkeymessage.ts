@@ -1,7 +1,7 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
 import {BufferT} from "../../../../core/buffert";
 import {SenderKeyMessageModel} from "../model/whispertext";
-import {PrivateKey, PublicKey} from "../keypair";
+import {PrivateKey, PublicKey} from "../model/keypair";
 import {lambda} from "../../../../core/kernel";
 import {Crypto, SignatureBuffer} from "../crypto";
 import {FixedBuffer32} from "../../../../core/buffer";

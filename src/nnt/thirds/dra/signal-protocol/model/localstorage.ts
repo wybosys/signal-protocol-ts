@@ -1,5 +1,5 @@
 import {Model} from "./model";
-import {KeyPair, PreKey, PublicKey} from "../keypair";
+import {KeyPair, PreKey, PublicKey} from "./keypair";
 import {FixedBuffer32} from "../../../../core/buffer";
 import {IndexedObject} from "../../../../core/kernel";
 import {HMacKeyBuffer, IvBuffer} from "../crypto";

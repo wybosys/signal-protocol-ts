@@ -1,7 +1,7 @@
 import {HMacKeyBuffer, IvBuffer} from "../crypto";
 import {BufferT} from "../../../../core/buffert";
 import {FixedBuffer16, FixedBuffer32} from "../../../../core/buffer";
-import {KeyPair, PublicKey} from "../keypair";
+import {KeyPair, PublicKey} from "../model/keypair";
 import {use} from "../../../../core/kernel";
 
 const CIPHER_KEY_LENGTH = 32;
