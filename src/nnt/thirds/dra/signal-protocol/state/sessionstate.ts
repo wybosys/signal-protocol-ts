@@ -6,7 +6,7 @@ import {
     PendingPreKeyModel,
     SessionStructureModel
 } from "../model/localstorage";
-import {IdentityKeyPair, KeyPair, PublicKey} from "../model/keypair";
+import {KeyPair} from "../model/keypair";
 import {RootKey} from "../ratchet/rootkey";
 import {HKDF} from "../kdf/HKDF";
 import {make_tuple2, tuple2, use} from "../../../../core/kernel";
@@ -14,6 +14,9 @@ import {ChainKey} from "../ratchet/chainkey";
 import {ArrayT} from "../../../../core/arrayt";
 import {MessageKeys} from "../ratchet/messagekeys";
 import {ISerializableObject} from "../../../../core/object";
+import {PublicKey} from "../model/publickey";
+import {IdentityKeyPair} from "../model/identitykeypair";
+import {IdentityKey} from "../model/identitykey";
 
 const MAX_MESSAGE_KEYS = 2000;
 
@@ -63,19 +66,19 @@ export class SessionState implements ISerializableObject {
         return version == 0 ? 2 : version;
     }
 
-    set remoteIdentityKey(identityKey: PublicKey) {
+    set remoteIdentityKey(identityKey: IdentityKey) {
         this._sessionStructure.remoteIdentity = identityKey;
     }
 
-    set localIdentityKey(identityKey: PublicKey) {
+    set localIdentityKey(identityKey: IdentityKey) {
         this._sessionStructure.localIdentity = identityKey;
     }
 
-    get remoteIdentityKey(): PublicKey {
+    get remoteIdentityKey(): IdentityKey {
         return this._sessionStructure.remoteIdentity;
     }
 
-    get localIdentityKey(): PublicKey {
+    get localIdentityKey(): IdentityKey {
         return this._sessionStructure.localIdentity;
     }
 
@@ -96,7 +99,7 @@ export class SessionState implements ISerializableObject {
     }
 
     getSenderRatchetKey() {
-        return this._sessionStructure.senderChain.senderRatchetKey.pub;
+        return this._sessionStructure.senderChain.senderRatchetKey.publicKey;
     }
 
     getSenderRatchetKeyPair() {
@@ -116,7 +119,7 @@ export class SessionState implements ISerializableObject {
 
         for (let i = 0; i < receiverChains.length; ++i) {
             let receiverChain = receiverChains[i];
-            let chainSenderRatchetKey = receiverChain.senderRatchetKey.pub;
+            let chainSenderRatchetKey = receiverChain.senderRatchetKey.publicKey;
             if (chainSenderRatchetKey.compare(senderEphemeral) == 0) {
                 return make_tuple2(receiverChain, i);
             }
@@ -144,7 +147,7 @@ export class SessionState implements ISerializableObject {
         let chain = use(new ChainModel(), m => {
             m.chainKey = chainKeyStructure;
             m.senderRatchetKey = use(new KeyPair(), kp => {
-                kp.pub = senderRatchetKey;
+                kp.publicKey = senderRatchetKey;
             });
         });
 

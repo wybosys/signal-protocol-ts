@@ -6,13 +6,12 @@ import {Address} from "./address";
 import {ProtocolStore} from "./state/protocolstore";
 import {SessionRecord} from "./state/sessionrecord";
 import {PreKeySignalMessage} from "./protocol/prekeysignalmessage";
-import {use} from "../../../core/kernel";
 import {BobParameters} from "./ratchet/bobparameters";
-import {IdentityKeyPair} from "./model/keypair";
 import {RatchetingSession} from "./ratchet/ratchetingsession";
 import {PreKeyBundle} from "./state/prekeybundle";
 import {Crypto} from "./crypto";
 import {AliceParameters} from "./ratchet/aliceparameters";
+import {IdentityKeyPair} from "./model/identitykeypair";
 
 export class SessionBuilder {
 
@@ -62,9 +61,7 @@ export class SessionBuilder {
 
         let parameters = new BobParameters();
         parameters.theirBaseKey = message.baseKey;
-        parameters.theirIdentityKey = use(new IdentityKeyPair(), kp => {
-            kp.pub = message.identityKey;
-        });
+        parameters.theirIdentityKey = new IdentityKeyPair(message.identityKey.publicKey);
         parameters.ourIdentityKey = await this._identityKeyStore.getIdentityKeyPair();
         parameters.ourSignedPreKey = ourSignedPreKey;
         parameters.ourRatchetKey = ourSignedPreKey;
@@ -99,7 +96,7 @@ export class SessionBuilder {
         }
 
         if (preKey.signedPreKey != null &&
-            !Crypto.VerifySign(preKey.identityKey.key.forSerialize.buffer, preKey.signedPreKeySignature, preKey.signedPreKey)) {
+            !Crypto.VerifySign(preKey.identityKey.publicKey.forSerialize.buffer, preKey.signedPreKeySignature, preKey.signedPreKey)) {
             console.error('dra: 签名验证失败');
             return;
         }
@@ -118,7 +115,7 @@ export class SessionBuilder {
         let parameters = new AliceParameters();
         parameters.ourBaseKey = ourBaseKey;
         parameters.ourIdentityKey = await this._identityKeyStore.getIdentityKeyPair();
-        parameters.theirIdentityKey = preKey.identityKey;
+        parameters.theirIdentityKey = new IdentityKeyPair(preKey.identityKey.publicKey);
         parameters.theirSignedPreKey = theirSignedPreKey;
         parameters.theirRatchetKey = theirSignedPreKey;
         parameters.theirOneTimePreKey = theirOneTimePreKey;
@@ -129,10 +126,10 @@ export class SessionBuilder {
 
         RatchetingSession.InitAliceSession(sessionRecord.sessionState, parameters);
 
-        sessionRecord.sessionState.setUnacknowledgedPreKeyMessage(theirOneTimePreKeyId, preKey.signedPreKeyId, ourBaseKey.pub);
+        sessionRecord.sessionState.setUnacknowledgedPreKeyMessage(theirOneTimePreKeyId, preKey.signedPreKeyId, ourBaseKey.publicKey);
         sessionRecord.sessionState.setLocalRegistrationId(await this._identityKeyStore.getLocalRegistrationId());
         sessionRecord.sessionState.setRemoteRegistrationId(preKey.registrationId);
-        sessionRecord.sessionState.aliceBaseKey = ourBaseKey.pub;
+        sessionRecord.sessionState.aliceBaseKey = ourBaseKey.publicKey;
 
         await this._identityKeyStore.saveIdentity(this._remoteAddress, preKey.identityKey);
         await this._sessionStore.storeSession(this._remoteAddress, sessionRecord);

@@ -1,11 +1,12 @@
 import {CiphertextMessage, CiphertextMessageType} from "./ciphertextmessage";
 import {PreKeySignalMessageModel} from "../model/whispertext";
-import {SignalMessage} from "./signalmessage";
+import {ISignalMessage, SignalMessage} from "./signalmessage";
 import {BufferT} from "../../../../core/buffert";
 import {PublicKey} from "../model/publickey";
 import {IdentityKey} from "../model/identitykey";
+import {HMacKeyBuffer} from "../crypto";
 
-export class PreKeySignalMessage extends CiphertextMessage {
+export class PreKeySignalMessage extends CiphertextMessage implements ISignalMessage {
 
     private _version: number;
     private _registrationId: number;
@@ -13,7 +14,7 @@ export class PreKeySignalMessage extends CiphertextMessage {
     private _signedPreKeyId: number;
     private _baseKey: PublicKey;
     private _identityKey: IdentityKey;
-    private _message: SignalMessage;
+    private _message: ISignalMessage;
     private _serialized: Buffer;
 
     private constructor() {
@@ -49,7 +50,7 @@ export class PreKeySignalMessage extends CiphertextMessage {
         return r;
     }
 
-    static Create(messageVersion: number, registrationId: number, preKeyId: number, signedPreKeyId: number, baseKey: PublicKey, identityKey: IdentityKey, message: SignalMessage): PreKeySignalMessage {
+    static Create(messageVersion: number, registrationId: number, preKeyId: number, signedPreKeyId: number, baseKey: PublicKey, identityKey: IdentityKey, message: ISignalMessage): PreKeySignalMessage {
         let r = new PreKeySignalMessage();
         r._version = messageVersion;
         r._registrationId = registrationId;
@@ -108,5 +109,13 @@ export class PreKeySignalMessage extends CiphertextMessage {
 
     type(): CiphertextMessageType {
         return CiphertextMessageType.PREKEY;
+    }
+
+    readonly body: Buffer;
+    readonly counter: number;
+    readonly senderRatchetKey: PublicKey;
+
+    verifyMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer): boolean {
+        return false;
     }
 }

@@ -112,14 +112,14 @@ export class SenderKeyDistributionMessageModel extends Model {
 
     id: number;
     iteration: number;
-    chainKey: PublicKey;
+    chainKey: Buffer;
     signingKey: PublicKey;
 
     toPod(): IndexedObject {
         return {
             id: this.id,
             iteration: this.iteration,
-            chainKey: this.chainKey.serialize(),
+            chainKey: this.chainKey.toString('hex'),
             signingKey: this.signingKey.serialize()
         };
     }
@@ -127,7 +127,7 @@ export class SenderKeyDistributionMessageModel extends Model {
     fromPod(obj: IndexedObject): this {
         this.id = obj.id;
         this.iteration = obj.iteration;
-        this.chainKey = new PublicKey().deserialize(obj.chainKey);
+        this.chainKey = Buffer.from(obj.chainKey, 'hex');
         this.signingKey = new PublicKey().deserialize(obj.signingKey);
         return this;
     }

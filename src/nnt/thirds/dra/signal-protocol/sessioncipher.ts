@@ -5,16 +5,15 @@ import {PreKeyStore} from "./state/prekeystore";
 import {Address} from "./address";
 import {SignedPreKeyStore} from "./state/signedprekeystore";
 import {ProtocolStore} from "./state/protocolstore";
-import {CiphertextMessage} from "./protocol/ciphertextmessage";
 import {MessageKeys} from "./ratchet/messagekeys";
-import {SignalMessage} from "./protocol/signalmessage";
+import {ISignalMessage, SignalMessage} from "./protocol/signalmessage";
 import {PreKeySignalMessage} from "./protocol/prekeysignalmessage";
 import {SessionRecord} from "./state/sessionrecord";
 import {SessionState} from "./state/sessionstate";
 import {ArrayT} from "../../../core/arrayt";
-import {PublicKey} from "./model/keypair";
 import {ChainKey} from "./ratchet/chainkey";
 import {Crypto} from "./crypto";
+import {PublicKey} from "./model/publickey";
 import crypto = require('crypto');
 
 export class SessionCipher {
@@ -42,7 +41,7 @@ export class SessionCipher {
         return this.Create(store, store, store, store, remoteAddress);
     }
 
-    async encrypt(paddedMessage: Buffer): Promise<CiphertextMessage> {
+    async encrypt(paddedMessage: Buffer): Promise<ISignalMessage> {
         let sessionRecord = await this._sessionStore.loadSession(this._remoteAddress);
         let sessionState = sessionRecord.sessionState;
         let chainKey = sessionState.getSenderChainKey();
@@ -52,7 +51,7 @@ export class SessionCipher {
         let sessionVersion = sessionState.sessionVersion;
 
         let ciphertextBody = this.getCiphertext(messageKeys, paddedMessage);
-        let ciphertextMessage: CiphertextMessage = SignalMessage.Create(
+        let ciphertextMessage: ISignalMessage = SignalMessage.Create(
             sessionVersion,
             messageKeys.macKey,
             senderEphemeral,
@@ -92,7 +91,7 @@ export class SessionCipher {
     async decryptPreKey(ciphertext: PreKeySignalMessage): Promise<Buffer> {
         let sessionRecord = await this._sessionStore.loadSession(this._remoteAddress);
         let unsignedPreKeyId = await this._sessionBuilder.process(sessionRecord, ciphertext);
-        let plaintext = await this.decrypt(sessionRecord, ciphertext.whisperMessage);
+        let plaintext = await this.decryptByRecord(sessionRecord, ciphertext.whisperMessage);
 
         await this._sessionStore.storeSession(this._remoteAddress, sessionRecord);
         if (unsignedPreKeyId != null) {
@@ -122,7 +121,7 @@ export class SessionCipher {
         return plaintext;
     }
 
-    private async decryptByRecord(sessionRecord: SessionRecord, ciphertext: SignalMessage): Promise<Buffer> {
+    private async decryptByRecord(sessionRecord: SessionRecord, ciphertext: ISignalMessage): Promise<Buffer> {
         try {
             let sessionState = SessionState.CreateByState(sessionRecord.sessionState);
             let plaintext = this.decryptByState(sessionState, ciphertext);
@@ -149,7 +148,7 @@ export class SessionCipher {
         return null;
     }
 
-    private async decryptByState(sessionState: SessionState, ciphertext: SignalMessage): Promise<Buffer> {
+    private async decryptByState(sessionState: SessionState, ciphertext: ISignalMessage): Promise<Buffer> {
         if (!sessionState.hasSenderChain()) {
             throw new Error('dra: 未初始化session');
         }
@@ -158,7 +157,7 @@ export class SessionCipher {
             throw  new Error('dra: 不支持该版本消息');
         }
 
-        let theirEphemeral = ciphertext.senderRatcherKey;
+        let theirEphemeral = ciphertext.senderRatchetKey;
         let counter = ciphertext.counter;
         let chainKey = await this.getOrCreateChainKey(sessionState, theirEphemeral);
         let messageKeys = await this.getOrCreateMessageKeys(sessionState, theirEphemeral, chainKey, counter);
@@ -228,13 +227,13 @@ export class SessionCipher {
     }
 
     private getCiphertext(messageKeys: MessageKeys, plaintext: Buffer): Buffer {
-        let cry = crypto.createCipheriv('aes-128-cbc', messageKeys.cipherKey.pub.forSerialize.buffer, messageKeys.iv.buffer);
+        let cry = crypto.createCipheriv('aes-128-cbc', messageKeys.cipherKey.buffer, messageKeys.iv.buffer);
         cry.update(plaintext);
         return cry.final();
     }
 
     private getPlaintext(messageKeys: MessageKeys, cipherText: Buffer): Buffer {
-        let cry = crypto.createDecipheriv('aes-128-cbc', messageKeys.cipherKey.pub.forSerialize.buffer, messageKeys.iv.buffer);
+        let cry = crypto.createDecipheriv('aes-128-cbc', messageKeys.cipherKey.buffer, messageKeys.iv.buffer);
         cry.update(cipherText);
         return cry.final();
     }

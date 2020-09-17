@@ -6,11 +6,21 @@ import {lambda} from "../../../../core/kernel";
 import {HMacDigestBuffer, HMacKeyBuffer} from "../crypto";
 import {PublicKey} from "../model/publickey";
 import {IdentityKey} from "../model/identitykey";
+import {ISerializableObject} from "../../../../core/object";
 import crypto = require('crypto');
 
-const MAC_LENGTH = 8;
+export interface ISignalMessage extends ISerializableObject {
+    readonly messageVersion: number;
+    readonly senderRatchetKey: PublicKey;
+    readonly counter: number;
+    readonly body: Buffer;
 
-export class SignalMessage extends CiphertextMessage {
+    verifyMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer): boolean;
+}
+
+export class SignalMessage extends CiphertextMessage implements ISignalMessage {
+
+    static MAC_LENGTH = 8;
 
     private _messageVersion: number;
     private _senderRatchetKey: PublicKey;
@@ -24,7 +34,7 @@ export class SignalMessage extends CiphertextMessage {
     }
 
     static Deserialize(serialized: Buffer): SignalMessage {
-        let messageparts = BufferT.SplitAs(serialized, 1, serialized.byteLength - 1 - MAC_LENGTH, MAC_LENGTH);
+        let messageparts = BufferT.SplitAs(serialized, 1, serialized.byteLength - 1 - SignalMessage.MAC_LENGTH, SignalMessage.MAC_LENGTH);
         let version = messageparts[0].readInt8();
         let message = messageparts[1];
         let mac = messageparts[2];
@@ -79,7 +89,7 @@ export class SignalMessage extends CiphertextMessage {
         return r;
     }
 
-    get senderRatcherKey() {
+    get senderRatchetKey(): PublicKey {
         return this._senderRatchetKey;
     }
 
@@ -96,7 +106,7 @@ export class SignalMessage extends CiphertextMessage {
     }
 
     verifyMac(senderIdentityKey: IdentityKey, receiverIdentityKey: IdentityKey, macKey: HMacKeyBuffer): boolean {
-        let parts = BufferT.SplitAs(this._serialized, this._serialized.byteLength - MAC_LENGTH, MAC_LENGTH);
+        let parts = BufferT.SplitAs(this._serialized, this._serialized.byteLength - SignalMessage.MAC_LENGTH, SignalMessage.MAC_LENGTH);
         let ourMac = SignalMessage.GetMac(senderIdentityKey, receiverIdentityKey, macKey, parts[0]);
         let theirMac = parts[1];
 
@@ -108,7 +118,7 @@ export class SignalMessage extends CiphertextMessage {
         cry.update(senderIdentityKey.publicKey.forSerialize.buffer);
         cry.update(receiverIdentityKey.publicKey.forSerialize.buffer);
         let fullMac = cry.digest();
-        return new FixedBuffer8(fullMac.slice(0, MAC_LENGTH));
+        return new FixedBuffer8(fullMac.slice(0, SignalMessage.MAC_LENGTH));
     }
 
     serialize(): Buffer {

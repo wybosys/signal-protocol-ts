@@ -7,11 +7,11 @@ export class SenderKeyDistributionMessage extends CiphertextMessage {
 
     private _id: number;
     private _iteration: number;
-    private _chainKey: PublicKey;
+    private _chainKey: Buffer;
     private _signatureKey: PublicKey;
     private _serialized: Buffer;
 
-    static Create(id: number, iteration: number, chainKey: PublicKey, signatureKey: PublicKey): SenderKeyDistributionMessage {
+    static Create(id: number, iteration: number, chainKey: Buffer, signatureKey: PublicKey): SenderKeyDistributionMessage {
         let version = BufferT.FromInt16BE((this.CURRENT_VERSION << 8) | this.CURRENT_VERSION);
 
         let builder = new SenderKeyDistributionMessageModel();

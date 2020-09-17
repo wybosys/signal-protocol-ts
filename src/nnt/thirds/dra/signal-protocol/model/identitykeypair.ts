@@ -5,10 +5,10 @@ import {IndexedObject} from "../../../../core/kernel";
 
 export class IdentityKeyPair extends Model {
 
-    private _publicKey: PublicKey;
-    private _privateKey: PrivateKey;
+    private _publicKey?: PublicKey;
+    private _privateKey?: PrivateKey;
 
-    constructor(pub: PublicKey, prv: PrivateKey) {
+    constructor(pub?: PublicKey, prv?: PrivateKey) {
         super();
         this._publicKey = pub;
         this._privateKey = prv;

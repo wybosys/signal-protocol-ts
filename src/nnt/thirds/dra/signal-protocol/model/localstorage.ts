@@ -2,9 +2,11 @@ import {Model} from "./model";
 import {KeyPair} from "./keypair";
 import {FixedBuffer16, FixedBuffer32} from "../../../../core/buffer";
 import {IndexedObject} from "../../../../core/kernel";
-import {HMacKeyBuffer, IvBuffer} from "../crypto";
+import {AesKeyBuffer, HMacKeyBuffer, IvBuffer} from "../crypto";
 import {PublicKey} from "./publickey";
 import {ArrayT} from "../../../../core/arrayt";
+import {IdentityKeyPair} from "./identitykeypair";
+import {IdentityKey} from "./identitykey";
 
 export class ChainModel extends Model {
 
@@ -50,14 +52,14 @@ export class ChainKeyModel extends Model {
 export class MessageKeyModel extends Model {
 
     index: number;
-    cipherKey: KeyPair;
+    cipherKey: AesKeyBuffer;
     macKey: HMacKeyBuffer;
     iv: IvBuffer;
 
     toPod(): IndexedObject {
         return {
             index: this.index,
-            cipherKey: this.cipherKey.toPod(),
+            cipherKey: this.cipherKey.serialize(),
             macKey: this.macKey.serialize(),
             iv: this.iv.serialize()
         };
@@ -65,7 +67,7 @@ export class MessageKeyModel extends Model {
 
     fromPod(obj: IndexedObject): this {
         this.index = obj.index;
-        this.cipherKey = new KeyPair().deserialize(obj.cipherKey);
+        this.cipherKey = new FixedBuffer32().deserialize(obj.cipherKey);
         this.macKey = new FixedBuffer32().deserialize(obj.macKey);
         this.iv = new FixedBuffer16().deserialize(obj.iv);
         return this;
@@ -77,7 +79,7 @@ export class PendingKeyExchangeModel extends Model {
     sequence: number;
     localBaseKey: KeyPair;
     localRatchetKey: KeyPair;
-    localIdentityKey: KeyPair;
+    localIdentityKey: IdentityKeyPair;
 
     toPod(): IndexedObject {
         return {
@@ -92,7 +94,7 @@ export class PendingKeyExchangeModel extends Model {
         this.sequence = obj.sequence;
         this.localBaseKey = new KeyPair().fromPod(obj.localBaseKey);
         this.localRatchetKey = new KeyPair().fromPod(obj.localRatchetKey);
-        this.localIdentityKey = new KeyPair().fromPod(obj.localIdentityKey);
+        this.localIdentityKey = new IdentityKeyPair().fromPod(obj.localIdentityKey);
         return this;
     }
 }
@@ -122,8 +124,8 @@ export class PendingPreKeyModel extends Model {
 export class SessionStructureModel extends Model {
 
     sessionVersion: number;
-    localIdentity: PublicKey;
-    remoteIdentity: PublicKey;
+    localIdentity: IdentityKey;
+    remoteIdentity: IdentityKey;
 
     rootKey: FixedBuffer32;
     previousCounter: number;
@@ -143,8 +145,8 @@ export class SessionStructureModel extends Model {
     toPod(): IndexedObject {
         return {
             sessionVersion: this.sessionVersion,
-            localIdentity: this.localIdentity.serialize(),
-            remoteIdentity: this.remoteIdentity.serialize(),
+            localIdentity: this.localIdentity.toPod(),
+            remoteIdentity: this.remoteIdentity.toPod(),
             rootKey: this.rootKey.serialize(),
             previousCounter: this.previousCounter,
             senderChain: this.senderChain.toPod(),
@@ -160,8 +162,8 @@ export class SessionStructureModel extends Model {
 
     fromPod(obj: IndexedObject): this {
         this.sessionVersion = obj.sessionVersion;
-        this.localIdentity = new PublicKey().deserialize(obj.localIdentity);
-        this.remoteIdentity = new PublicKey().deserialize(obj.remoteIdentity);
+        this.localIdentity = new IdentityKey().fromPod(obj.localIdentity);
+        this.remoteIdentity = new IdentityKey().fromPod(obj.remoteIdentity);
         this.rootKey = new FixedBuffer32(obj.rootKey);
         this.previousCounter = obj.previousCounter;
         this.senderChain = new ChainModel().fromPod(obj.senderChain);
